@@ -1,7 +1,8 @@
 import * as Datetime from "react-datetime";
 export type Reservation = {
-    id: Number;
+    id: String;
     name:String;
+    //TODO: zprovoznit DateTime
     // timeFrom:Datetime;
     // timeTo:Datetime;
     timeFrom:number;
@@ -14,10 +15,15 @@ export type Reservation = {
 
 //TODO
 export type Place = {
-    id: Number;
+    id: String;
     name:String;
     hourCost:Number;
+    //TODO: typ GPS
+    // gps:
 }
 export type User = {
+    id: String;
     name:String;
+    surname:String;
+
 }

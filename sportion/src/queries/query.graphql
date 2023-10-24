@@ -1,0 +1,11 @@
+query Reservation{
+reservation{
+id,
+name,
+timeFrom,
+timeTo,
+place,
+charge,
+paid
+}
+}

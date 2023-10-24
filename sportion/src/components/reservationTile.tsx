@@ -68,16 +68,20 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
+import { useReservationQuery } from '../../generated/graphql';
+//TODO: GraphQL napojení
+
 const reservationsData = [
-  { id: 1, name: "Trenink", place: "Hřiště", timeFrom: 8, timeTo: 10, charge: 10, paid: true },
-  { id: 2, name: "Zápas", place: "Hřiště", timeFrom: 11, timeTo: 12, charge: 15, paid: false },
-  { id: 3, name: "Tenisový zápas", place: "Kurty", timeFrom: 9, timeTo: 11, charge: 30, paid: true }
+  { id: "a", name: "Trenink", place: "Hřiště", timeFrom: 8, timeTo: 10, charge: 10, paid: true },
+  { id: "b", name: "Zápas", place: "Hřiště", timeFrom: 11, timeTo: 12, charge: 15, paid: false },
+  { id: "c", name: "Tenisový zápas", place: "Kurty", timeFrom: 9, timeTo: 11, charge: 30, paid: true },
+  { id: "d", name: "Fotbalový trénink", place: "Fotbalové hřiště", timeFrom: 7, timeTo: 11, charge: 30, paid: true }
 ];
 
-// Sort reservations by timeFrom in ascending order
 const sortedReservations = reservationsData.slice().sort((a, b) => a.timeFrom - b.timeFrom);
 
-const ReservationsTable = ({ reservations }) => {
+const ReservationsTable = () => {
+const { data } = useReservationQuery();
   return (
     <TableContainer component={Paper}>
       <Table size="small" aria-label="a dense table">
@@ -91,7 +95,7 @@ const ReservationsTable = ({ reservations }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {sortedReservations.map((reservation) => (
+          {data?.reservation.map((reservation) => (
             <TableRow key={reservation.id}>
               <TableCell align="center" component="th" scope="row">
                 {reservation.name}
@@ -108,7 +112,7 @@ const ReservationsTable = ({ reservations }) => {
   );
 };
 
-const Reservations = () => {
+const ReservationTile = () => {
   return (
     <Paper sx={{ maxWidth: 500 }}>
       <Typography align="center" variant="h4">Upcoming reservations</Typography>
@@ -117,4 +121,4 @@ const Reservations = () => {
   );
 };
 
-export default Reservations;
+export default ReservationTile;
