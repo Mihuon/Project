@@ -15,10 +15,15 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import { FC } from 'react';
 
+import { useAuthContext } from './auth-context-provider';
+import { authUtils } from '@/firebase/authUtils';
+import Link from 'next/link';
+type Props = {};
 
-
-export default function PrimaryAppBar() {
+export const PrimaryAppbar: FC<Props> = () => {
+  const { user } = useAuthContext();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -60,8 +65,10 @@ export default function PrimaryAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      {user?.email}
+      <Link key="login" href="./login"><MenuItem onClick={handleMenuClose}>Přihlásit</MenuItem>
+      </Link>
+      <MenuItem onClick={authUtils.logout}>Odhlásit</MenuItem>
     </Menu>
   );
 
@@ -116,7 +123,7 @@ export default function PrimaryAppBar() {
       </MenuItem>
     </Menu>
   );
-
+console.log(user)
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -136,6 +143,7 @@ export default function PrimaryAppBar() {
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
+            
             Sportion
           </Typography>
 

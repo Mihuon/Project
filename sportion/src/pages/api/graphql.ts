@@ -38,19 +38,18 @@ const typeDefs = gql`
 const db = firestore();
 const resolvers = {
     Query: {
-        // users: async () => {
-        //     const usersRef = db.collection(
-        //         'users',
-        //     ) as FirebaseFirestore.CollectionReference<DbUser>;
-        //     const docsRefs = await usersRef.listDocuments();
-        //     const docsSnapshotPromises = docsRefs.map((doc) => doc.get());
-        //     const docsSnapshots = await Promise.all(docsSnapshotPromises);
-        //     const docs = docsSnapshots.map((doc) => doc.data()!);
-        //     console.log(docs);
+        users: async () => {
+            const usersRef = db.collection(
+                'users',
+            ) as FirebaseFirestore.CollectionReference<DbUser>;
+            const docsRefs = await usersRef.listDocuments();
+            const docsSnapshotPromises = docsRefs.map((doc) => doc.get());
+            const docsSnapshots = await Promise.all(docsSnapshotPromises);
+            const docs = docsSnapshots.map((doc) => doc.data()!);
+            console.log(docs);
 
-        //     return [{ name: 'Nextjs' }];
-        // },
-        // actuality:() =>{
+            return [{ name: 'Nextjs' }];
+        },
         reservation: async (context: Context) => {
             const result = await db.collection('Reservation').get();
 
@@ -72,44 +71,6 @@ const resolvers = {
             console.log(data);
             return data;
         },
-        // actuality: async (context: Context) => {
-        //     const result = await db.collection('Actuality').get();
-
-        //     const data = [];
-
-        //     result.forEach((doc) => {
-        //         const docData = doc.data();
-
-        //         data.push({
-        //             id: doc.id,
-        //             title: docData.title,
-        //             description: docData.description,
-        //             image: docData.image,
-        //         });
-        //     });
-        //     console.log(data);
-        //     return data;
-        // },
-        // commodity: async (context: Context) => {
-        //     const result = await db.collection('Commodity').get();
-
-        //     const data = [];
-
-        //     result.forEach((doc) => {
-        //         const docData = doc.data();
-
-        //         data.push({
-        //             id: doc.id,
-        //             count: docData.count,
-        //             description: docData.description,
-        //             image: docData.image,
-        //             name: docData.name,
-        //             placement: docData.placement,
-        //         });
-        //     });
-        //     console.log(data);
-        //     return data;
-        // },
         githubUsers: async () => {
             try {
                 const users = await axios.get('https://api.github.com/users');
@@ -124,17 +85,6 @@ const resolvers = {
             }
         }
     },
-    // Mutation: {
-    //     createActuality: (parent: unknown, args: { title: string, description: string, image: string }) => {
-    //         const actuality = {
-    //             title: args.title,
-    //             description: args.description,
-    //             image: args.image
-    //         };
-    //         db.collection('Actuality').add(actuality);
-    //         return args;
-    //     }
-    // }
 };
 const schema = createSchema({
     typeDefs,

@@ -1,28 +1,28 @@
 import { Grid } from "@mui/material";
-import ReservationTile from "./reservationTile";
+import { FC } from "react";
+import { ReservationTile } from "./reservationTile";
 
-const IndexGrid = () => {
+type Props = {};
+
+export const IndexGrid: FC<Props> = () => {
   return (
-    <Grid container spacing={{ xs: 4, m: 4 }} columns={{ xs: 1, sm: 8, md: 12}}>
-      
-        <Grid item xs={2} sm={4} md={4}>
+    <Grid container spacing={3} justifyContent={"space-around"}>
+        <Grid item>
           <ReservationTile/>
         </Grid>
         
-        <Grid item xs={2} sm={4} md={4}>
+        <Grid item>
           <ReservationTile/>
         </Grid>
         
-        <Grid item xs={2} sm={4} md={4}>
+        <Grid item>
           <ReservationTile/>
         </Grid>
         
-        <Grid item xs={2} sm={4} md={4}>
+        <Grid item>
           <ReservationTile/>
         </Grid>
-      
     </Grid>
+    
   );
 };
-
-export default IndexGrid;
