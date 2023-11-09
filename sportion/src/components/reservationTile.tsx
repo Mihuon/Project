@@ -1,5 +1,6 @@
+
 import React, { FC } from 'react';
-import { Typography } from '@mui/material';
+import { Link, MenuItem, Typography, Button } from '@mui/material';
 import { Reservation } from '../../types';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,22 +9,26 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
-import { useReservationQuery } from '../../generated/graphql';
+import { useReservationQuery, useCreateReservationMutation, useDeleteReservationMutation } from '../../generated/graphql';
 
 type Props = {};
-
-const ReservationsTable = () => {
+const ReservationsTable: FC<Props> = () => {
   const { data } = useReservationQuery();
+  const [deleteReservation] = useDeleteReservationMutation();
+  const handleDelete = (reservationId: string) => {
+    deleteReservation({ variables: { id: reservationId } });
+    window.location.reload();
+  };
   return (
     <TableContainer component={Paper}>
-      <Table size="small" aria-label="a dense table">
+      <Table size="small">
         <TableHead>
           <TableRow>
             <TableCell align="center">Název</TableCell>
             <TableCell align="center">Místo</TableCell>
             <TableCell align="center">Od</TableCell>
             <TableCell align="center">Zaplaceno</TableCell>
+            <TableCell align="center">Akce</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -35,6 +40,14 @@ const ReservationsTable = () => {
               <TableCell align="center">{reservation.place}</TableCell>
               <TableCell align="center">{reservation.timeFrom} - {reservation.timeTo}</TableCell>
               <TableCell align="center">{reservation.paid ? 'Ano' : 'Ne'}</TableCell>
+              <TableCell align="center">
+                <Link href={`/reservation/update/${reservation.id}`}>
+                  <MenuItem>Upravit</MenuItem>
+                </Link>
+                <Button  color="error" onClick={() => handleDelete(reservation.id)}>
+                  Smazat
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -42,13 +55,16 @@ const ReservationsTable = () => {
     </TableContainer>
   );
 };
-
 export const ReservationTile: FC<Props> = () => {
   return (
     <Paper sx={{ maxWidth: 500 }}>
-      <Typography align="center" variant="h4">Rezervace</Typography>
-      <ReservationsTable/>
+      <Link href="/reservation/create">
+        <MenuItem>Přidat</MenuItem>
+      </Link>
+      <Typography align="center" variant="h4">
+        Rezervace
+      </Typography>
+      <ReservationsTable />
     </Paper>
   );
 };
-

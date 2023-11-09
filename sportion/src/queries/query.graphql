@@ -9,3 +9,30 @@ charge,
 paid
 }
 }
+mutation CreateReservation($name: String, $timeFrom: Int, $timeTo: Int, $place: String,$charge:Int,$paid:Boolean){
+createReservation(name: $name,timeFrom: $timeFrom, timeTo: $timeTo, place: $place, charge: $charge, paid:$paid){
+id,
+name,
+timeFrom,
+timeTo,
+place,
+charge,
+paid
+}
+}
+mutation UpdateReservation($id: String!, $name: String, $timeFrom: Int, $timeTo: Int, $place: String, $charge: Int, $paid: Boolean) {
+updateReservation(id: $id, name: $name, timeFrom: $timeFrom, timeTo: $timeTo, place: $place, charge: $charge, paid: $paid) {
+id
+name
+timeFrom
+timeTo
+place
+charge
+paid
+}
+}
+mutation DeleteReservation($id: String) {
+deleteReservation(id: $id) {
+id
+}
+}

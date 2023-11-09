@@ -5,14 +5,14 @@ import { getApolloClient } from '../utility/appolo-client';
 import { AuthContextProvider } from '@/components/auth-context-provider';
 
 export default function App({ Component, pageProps }: AppProps) {
-  
+
   const client = getApolloClient({ forceNew: false });
-  return(
+  return (
     <AuthContextProvider>
-  <ApolloProvider client={client}>
-  <Component {...pageProps} />
-  
-  </ApolloProvider>
+      <ApolloProvider client={client}>
+        <Component {...pageProps} />
+
+      </ApolloProvider>
     </AuthContextProvider>
   )
 }

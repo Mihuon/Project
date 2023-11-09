@@ -11,7 +11,7 @@ export const IndexGrid: FC<Props> = () => {
           <ReservationTile/>
         </Grid>
         
-        <Grid item>
+        {/* <Grid item>
           <ReservationTile/>
         </Grid>
         
@@ -22,6 +22,14 @@ export const IndexGrid: FC<Props> = () => {
         <Grid item>
           <ReservationTile/>
         </Grid>
+        
+        <Grid item>
+          <ReservationTile/>
+        </Grid>
+        
+        <Grid item>
+          <ReservationTile/>
+        </Grid> */}
     </Grid>
     
   );

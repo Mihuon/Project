@@ -34,6 +34,26 @@ const typeDefs = gql`
   charge:Int
   paid:Boolean
   }
+  type Mutation {
+  createReservation(
+    name: String
+    timeFrom: Int
+    timeTo: Int
+    place: String
+    charge: Int
+    paid: Boolean
+  ): Reservation
+  updateReservation(
+    id: String
+    name: String
+    timeFrom: Int
+    timeTo: Int
+    place: String
+    charge: Int
+    paid: Boolean
+  ): Reservation
+  deleteReservation(id: String):Reservation
+}
 `;
 const db = firestore();
 const resolvers = {
@@ -57,7 +77,6 @@ const resolvers = {
 
             result.forEach((doc) => {
                 const docData = doc.data();
-
                 data.push({
                     id: doc.id,
                     name: docData.name,
@@ -85,6 +104,51 @@ const resolvers = {
             }
         }
     },
+    Mutation: {
+        createReservation: (parent: unknown, args: { name: string, timeFrom: number, timeTo: number, place: string, charge: number, paid: boolean }) => {
+            const reservation = {
+                name: args.name,
+                timeFrom: args.timeFrom,
+                timeTo: args.timeTo,
+                place: args.place,
+                charge: args.charge,
+                paid: args.paid
+            };
+            db.collection('Reservation').add(reservation);
+            return args;
+        },
+        updateReservation: async (parent: unknown, args: { id: string, name: string, timeFrom: number, timeTo: number, place: string, charge: number, paid: boolean }) => {
+            const reservation = {
+                name: args.name,
+                timeFrom: args.timeFrom,
+                timeTo: args.timeTo,
+                place: args.place,
+                charge: args.charge,
+                paid: args.paid
+            };
+            try {
+                // Use Firestore's 'update' method to update an existing document in the 'Reservation' collection
+                const reservationRef = db.collection('Reservation').doc(args.id);
+                await reservationRef.update(reservation);
+
+                // Return the updated reservation
+                const updatedReservation = await reservationRef.get();
+                return {
+                    id: args.id,
+                    ...updatedReservation.data()
+                };
+            } catch (error) {
+                // Handle any errors that occur during the update
+                throw error;
+            }
+        },
+        deleteReservation: async (parent: unknown, args: { id: string }) => {
+                const reservationRef = db.collection('Reservation').doc(args.id);
+                await reservationRef.delete();
+    
+                return true;
+        }
+    }
 };
 const schema = createSchema({
     typeDefs,

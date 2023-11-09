@@ -16,7 +16,6 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { FC } from 'react';
-
 import { useAuthContext } from './auth-context-provider';
 import { authUtils } from '@/firebase/authUtils';
 import Link from 'next/link';
@@ -66,9 +65,7 @@ export const PrimaryAppbar: FC<Props> = () => {
       onClose={handleMenuClose}
     >
       {user?.email}
-      <Link key="login" href="./login"><MenuItem onClick={handleMenuClose}>Přihlásit</MenuItem>
-      </Link>
-      <MenuItem onClick={authUtils.logout}>Odhlásit</MenuItem>
+      {user?.email == null ? (<Link key="login" href="./login"><MenuItem onClick={handleMenuClose}>Přihlásit se</MenuItem></Link>) : (<MenuItem onClick={authUtils.logout}>Odhlásit se</MenuItem>)}
     </Menu>
   );
 
@@ -90,7 +87,7 @@ export const PrimaryAppbar: FC<Props> = () => {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+        <IconButton size="large" color="inherit">
           <Badge badgeContent={4} color="error">
             <MailIcon />
           </Badge>
@@ -100,7 +97,6 @@ export const PrimaryAppbar: FC<Props> = () => {
       <MenuItem>
         <IconButton
           size="large"
-          aria-label="show 17 new notifications"
           color="inherit"
         >
           <Badge badgeContent={17} color="error">
@@ -112,7 +108,6 @@ export const PrimaryAppbar: FC<Props> = () => {
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
-          aria-label="account of current user"
           aria-controls="primary-account-menu"
           aria-haspopup="true"
           color="inherit"
@@ -123,7 +118,6 @@ export const PrimaryAppbar: FC<Props> = () => {
       </MenuItem>
     </Menu>
   );
-console.log(user)
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -132,7 +126,6 @@ console.log(user)
             size="large"
             edge="start"
             color="inherit"
-            aria-label="open drawer"
             sx={{ mr: 2 }}
           >
             <MenuIcon />
@@ -143,7 +136,6 @@ console.log(user)
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
-            
             Sportion
           </Typography>
 
@@ -160,7 +152,6 @@ console.log(user)
             <IconButton
               size="large"
               edge="end"
-              aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
@@ -172,7 +163,6 @@ console.log(user)
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
-              aria-label="show more"
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
