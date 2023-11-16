@@ -1,0 +1,26 @@
+query Place{
+place{
+id,
+name,
+cost
+}
+}
+mutation CreatePlace($name: String, $cost: Int){
+createPlace(name: $name,cost: $cost){
+id,
+name,
+cost,
+}
+}
+mutation UpdatePlace($id: String!, $name: String, $cost: Int) {
+updatePlace(id: $id, name: $name, cost: $cost) {
+id,
+name,
+cost
+}
+}
+mutation DeletePlace($id: String!) {
+deletePlace(id: $id) {
+id
+}
+}

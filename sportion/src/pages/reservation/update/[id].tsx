@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useReservationQuery,useUpdateReservationMutation } from '../../../../generated/graphql';
+import { useReservationQuery, useUpdateReservationMutation } from '../../../../generated/graphql';
 
 export default function UpdateReservation() {
-  const { data } = useReservationQuery();
   const router = useRouter();
   const { query } = router;
   const id = query.id;
+
+  const { data } = useReservationQuery();
 
   const [name, setName] = useState('');
   const [timeFrom, setTimeFrom] = useState('');
@@ -15,10 +16,40 @@ export default function UpdateReservation() {
   const [charge, setCharge] = useState('');
   const [paid, setPaid] = useState(false);
 
+  useEffect(() => {
+    if (id && data && data.reservation) {
+      const currentReservation = data.reservation.find(reservation => reservation.id === id);
+
+      if (currentReservation) {
+        setName(currentReservation.name);
+        setTimeFrom(currentReservation.timeFrom.toString());
+        setTimeTo(currentReservation.timeTo.toString());
+        setPlace(currentReservation.place);
+        setCharge(currentReservation.charge.toString());
+        setPaid(!!currentReservation.paid);
+      }
+    }
+  }, [id, data]);
+
   const [updateReservation] = useUpdateReservationMutation();
 
   const handleForm = async (event: FormEvent) => {
     event.preventDefault();
+
+    const updatedReservationData = {
+      id: id,
+      name,
+      timeFrom: parseInt(timeFrom),
+      timeTo: parseInt(timeTo),
+      place,
+      charge: parseFloat(charge),
+      paid,
+    };
+
+    const result = await updateReservation({
+      variables: updatedReservationData,
+    });
+
     router.push('/');
   };
 
@@ -33,6 +64,7 @@ export default function UpdateReservation() {
               onChange={(e) => setName(e.target.value)}
               required
               type="text"
+              value={name}
             />
           </label>
           <label>
@@ -41,6 +73,7 @@ export default function UpdateReservation() {
               onChange={(e) => setTimeFrom(e.target.value)}
               required
               type="number"
+              value={timeFrom}
             />
           </label>
           <label>
@@ -49,6 +82,7 @@ export default function UpdateReservation() {
               onChange={(e) => setTimeTo(e.target.value)}
               required
               type="number"
+              value={timeTo}
             />
           </label>
           <label>
@@ -57,6 +91,7 @@ export default function UpdateReservation() {
               onChange={(e) => setPlace(e.target.value)}
               required
               type="text"
+              value={place}
             />
           </label>
           <label>
@@ -65,6 +100,7 @@ export default function UpdateReservation() {
               onChange={(e) => setCharge(e.target.value)}
               required
               type="number"
+              value={charge}
             />
           </label>
           <label>
@@ -72,6 +108,7 @@ export default function UpdateReservation() {
             <select
               onChange={(e) => setPaid(e.target.value === 'true')}
               required
+              value={paid ? 'true' : 'false'}
             >
               <option value="true">Yes</option>
               <option value="false">No</option>

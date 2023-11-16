@@ -36,3 +36,4 @@ deleteReservation(id: $id) {
 id
 }
 }
+

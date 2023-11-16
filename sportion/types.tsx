@@ -17,9 +17,7 @@ export type Reservation = {
 export type Place = {
     id: String;
     name:String;
-    hourCost:Number;
-    //TODO: typ GPS
-    // gps:
+    cost:Number;
 }
 export type User = {
     id: String;

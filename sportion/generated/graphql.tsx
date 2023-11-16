@@ -24,9 +24,18 @@ export type GithubUser = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createPlace?: Maybe<Place>;
   createReservation?: Maybe<Reservation>;
+  deletePlace?: Maybe<Place>;
   deleteReservation?: Maybe<Reservation>;
+  updatePlace?: Maybe<Place>;
   updateReservation?: Maybe<Reservation>;
+};
+
+
+export type MutationCreatePlaceArgs = {
+  cost?: InputMaybe<Scalars['Int']>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -40,8 +49,20 @@ export type MutationCreateReservationArgs = {
 };
 
 
+export type MutationDeletePlaceArgs = {
+  id?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationDeleteReservationArgs = {
   id?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdatePlaceArgs = {
+  cost?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -55,9 +76,17 @@ export type MutationUpdateReservationArgs = {
   timeTo?: InputMaybe<Scalars['Int']>;
 };
 
+export type Place = {
+  __typename?: 'Place';
+  cost?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   githubUsers: Array<GithubUser>;
+  place: Array<Place>;
   reservation: Array<Reservation>;
   users: Array<User>;
 };
@@ -78,10 +107,34 @@ export type User = {
   name?: Maybe<Scalars['String']>;
 };
 
-export type Usr = {
-  __typename?: 'Usr';
-  name?: Maybe<Scalars['String']>;
-};
+export type PlaceQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PlaceQuery = { __typename?: 'Query', place: Array<{ __typename?: 'Place', id?: string | null, name?: string | null, cost?: number | null }> };
+
+export type CreatePlaceMutationVariables = Exact<{
+  name?: InputMaybe<Scalars['String']>;
+  cost?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type CreatePlaceMutation = { __typename?: 'Mutation', createPlace?: { __typename?: 'Place', id?: string | null, name?: string | null, cost?: number | null } | null };
+
+export type UpdatePlaceMutationVariables = Exact<{
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  cost?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type UpdatePlaceMutation = { __typename?: 'Mutation', updatePlace?: { __typename?: 'Place', id?: string | null, name?: string | null, cost?: number | null } | null };
+
+export type DeletePlaceMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeletePlaceMutation = { __typename?: 'Mutation', deletePlace?: { __typename?: 'Place', id?: string | null } | null };
 
 export type ReservationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -121,6 +174,148 @@ export type DeleteReservationMutationVariables = Exact<{
 export type DeleteReservationMutation = { __typename?: 'Mutation', deleteReservation?: { __typename?: 'Reservation', id?: string | null } | null };
 
 
+export const PlaceDocument = gql`
+    query Place {
+  place {
+    id
+    name
+    cost
+  }
+}
+    `;
+
+/**
+ * __usePlaceQuery__
+ *
+ * To run a query within a React component, call `usePlaceQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePlaceQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePlaceQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePlaceQuery(baseOptions?: Apollo.QueryHookOptions<PlaceQuery, PlaceQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PlaceQuery, PlaceQueryVariables>(PlaceDocument, options);
+      }
+export function usePlaceLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PlaceQuery, PlaceQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PlaceQuery, PlaceQueryVariables>(PlaceDocument, options);
+        }
+export type PlaceQueryHookResult = ReturnType<typeof usePlaceQuery>;
+export type PlaceLazyQueryHookResult = ReturnType<typeof usePlaceLazyQuery>;
+export type PlaceQueryResult = Apollo.QueryResult<PlaceQuery, PlaceQueryVariables>;
+export const CreatePlaceDocument = gql`
+    mutation CreatePlace($name: String, $cost: Int) {
+  createPlace(name: $name, cost: $cost) {
+    id
+    name
+    cost
+  }
+}
+    `;
+export type CreatePlaceMutationFn = Apollo.MutationFunction<CreatePlaceMutation, CreatePlaceMutationVariables>;
+
+/**
+ * __useCreatePlaceMutation__
+ *
+ * To run a mutation, you first call `useCreatePlaceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePlaceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPlaceMutation, { data, loading, error }] = useCreatePlaceMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      cost: // value for 'cost'
+ *   },
+ * });
+ */
+export function useCreatePlaceMutation(baseOptions?: Apollo.MutationHookOptions<CreatePlaceMutation, CreatePlaceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePlaceMutation, CreatePlaceMutationVariables>(CreatePlaceDocument, options);
+      }
+export type CreatePlaceMutationHookResult = ReturnType<typeof useCreatePlaceMutation>;
+export type CreatePlaceMutationResult = Apollo.MutationResult<CreatePlaceMutation>;
+export type CreatePlaceMutationOptions = Apollo.BaseMutationOptions<CreatePlaceMutation, CreatePlaceMutationVariables>;
+export const UpdatePlaceDocument = gql`
+    mutation UpdatePlace($id: String!, $name: String, $cost: Int) {
+  updatePlace(id: $id, name: $name, cost: $cost) {
+    id
+    name
+    cost
+  }
+}
+    `;
+export type UpdatePlaceMutationFn = Apollo.MutationFunction<UpdatePlaceMutation, UpdatePlaceMutationVariables>;
+
+/**
+ * __useUpdatePlaceMutation__
+ *
+ * To run a mutation, you first call `useUpdatePlaceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePlaceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePlaceMutation, { data, loading, error }] = useUpdatePlaceMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      cost: // value for 'cost'
+ *   },
+ * });
+ */
+export function useUpdatePlaceMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePlaceMutation, UpdatePlaceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePlaceMutation, UpdatePlaceMutationVariables>(UpdatePlaceDocument, options);
+      }
+export type UpdatePlaceMutationHookResult = ReturnType<typeof useUpdatePlaceMutation>;
+export type UpdatePlaceMutationResult = Apollo.MutationResult<UpdatePlaceMutation>;
+export type UpdatePlaceMutationOptions = Apollo.BaseMutationOptions<UpdatePlaceMutation, UpdatePlaceMutationVariables>;
+export const DeletePlaceDocument = gql`
+    mutation DeletePlace($id: String!) {
+  deletePlace(id: $id) {
+    id
+  }
+}
+    `;
+export type DeletePlaceMutationFn = Apollo.MutationFunction<DeletePlaceMutation, DeletePlaceMutationVariables>;
+
+/**
+ * __useDeletePlaceMutation__
+ *
+ * To run a mutation, you first call `useDeletePlaceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePlaceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePlaceMutation, { data, loading, error }] = useDeletePlaceMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePlaceMutation(baseOptions?: Apollo.MutationHookOptions<DeletePlaceMutation, DeletePlaceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePlaceMutation, DeletePlaceMutationVariables>(DeletePlaceDocument, options);
+      }
+export type DeletePlaceMutationHookResult = ReturnType<typeof useDeletePlaceMutation>;
+export type DeletePlaceMutationResult = Apollo.MutationResult<DeletePlaceMutation>;
+export type DeletePlaceMutationOptions = Apollo.BaseMutationOptions<DeletePlaceMutation, DeletePlaceMutationVariables>;
 export const ReservationDocument = gql`
     query Reservation {
   reservation {

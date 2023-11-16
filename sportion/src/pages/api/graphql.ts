@@ -12,11 +12,9 @@ const typeDefs = gql`
     users: [User!]!
     githubUsers: [GithubUser!]!
     reservation: [Reservation!]!
+    place: [Place!]!
   }
   type User {
-    name: String
-  }
-  type Usr {
     name: String
   }
   type GithubUser {
@@ -34,6 +32,11 @@ const typeDefs = gql`
   charge:Int
   paid:Boolean
   }
+  type Place {
+  id: String
+  name:String
+  cost:Int
+}
   type Mutation {
   createReservation(
     name: String
@@ -53,6 +56,18 @@ const typeDefs = gql`
     paid: Boolean
   ): Reservation
   deleteReservation(id: String):Reservation
+
+  
+  createPlace(
+    name: String
+    cost: Int
+  ): Place
+  updatePlace(
+    id: String
+    name: String
+    cost: Int
+  ): Place
+  deletePlace(id: String):Place
 }
 `;
 const db = firestore();
@@ -85,6 +100,22 @@ const resolvers = {
                     place: docData.place,
                     paid: docData.paid,
                     charge: docData.charge
+                });
+            });
+            console.log(data);
+            return data;
+        },
+        place: async (context: Context) => {
+            const result = await db.collection('Place').get();
+
+            const data = [];
+
+            result.forEach((doc) => {
+                const docData = doc.data();
+                data.push({
+                    id: doc.id,
+                    name: docData.name,
+                    cost: docData.cost
                 });
             });
             console.log(data);
@@ -126,27 +157,49 @@ const resolvers = {
                 charge: args.charge,
                 paid: args.paid
             };
-            try {
-                // Use Firestore's 'update' method to update an existing document in the 'Reservation' collection
-                const reservationRef = db.collection('Reservation').doc(args.id);
-                await reservationRef.update(reservation);
+            const reservationRef = db.collection('Reservation').doc(args.id);
+            await reservationRef.update(reservation);
 
-                // Return the updated reservation
-                const updatedReservation = await reservationRef.get();
-                return {
-                    id: args.id,
-                    ...updatedReservation.data()
-                };
-            } catch (error) {
-                // Handle any errors that occur during the update
-                throw error;
-            }
+            const updatedReservation = await reservationRef.get();
+            return {
+                id: args.id,
+                ...updatedReservation.data()
+            };
         },
         deleteReservation: async (parent: unknown, args: { id: string }) => {
-                const reservationRef = db.collection('Reservation').doc(args.id);
-                await reservationRef.delete();
-    
-                return true;
+            const reservationRef = db.collection('Reservation').doc(args.id);
+            await reservationRef.delete();
+
+            return true;
+        },
+
+        createPlace: (parent: unknown, args: { name: string, cost: number}) => {
+            const place = {
+                name: args.name,
+                cost: args.cost
+            };
+            db.collection('Place').add(place);
+            return args;
+        },
+        updatePlace: async (parent: unknown, args: { id: string, name: string, cost: number}) => {
+            const place = {
+                name: args.name,
+                cost: args.cost
+            };
+            const placeRef = db.collection('Place').doc(args.id);
+            await placeRef.update(place);
+
+            const updatedPlace = await placeRef.get();
+            return {
+                id: args.id,
+                ...updatedPlace.data()
+            };
+        },
+        deletePlace: async (parent: unknown, args: { id: string }) => {
+            const placeRef = db.collection('Place').doc(args.id);
+            await placeRef.delete();
+
+            return true;
         }
     }
 };
@@ -164,6 +217,7 @@ export default createYoga({
     graphqlEndpoint: '/api/graphql',
     context: async (context) => {
         const auth = context.request.headers.get('authorization');
+        //! SMAZAT CONSOLE LOG
         console.log(auth);
         return {
             user: auth ? await verifyToken(auth) : undefined,
