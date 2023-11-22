@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useCreateReservationMutation } from '../../../generated/graphql';
+import { useCreateReservationMutation, usePlaceQuery } from '../../../generated/graphql';
 import { authUtils } from '../../firebase/authUtils';
 
 export default function Page() {
@@ -68,12 +68,16 @@ export default function Page() {
             />
           </label>
           <label>
-            <p>Place</p>
-            <input
+            <p>Místo</p>
+            <select
               onChange={(e) => setPlace(e.target.value)}
               required
-              type="text"
-            />
+              value={place}
+            >
+              {usePlaceQuery().data?.place.map((place) => (
+              <option key={place.id} value={place.id?.toString()}>{place.name}</option>
+              ))}
+            </select>
           </label>
           <label>
             <p>Charge</p>

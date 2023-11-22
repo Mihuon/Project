@@ -1,6 +1,6 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useReservationQuery, useUpdateReservationMutation } from '../../../../generated/graphql';
+import { useReservationQuery, useUpdateReservationMutation, usePlaceQuery } from '../../../../generated/graphql';
 
 export default function UpdateReservation() {
   const router = useRouter();
@@ -8,6 +8,7 @@ export default function UpdateReservation() {
   const id = query.id;
 
   const { data } = useReservationQuery();
+console.log(data);
 
   const [name, setName] = useState('');
   const [timeFrom, setTimeFrom] = useState('');
@@ -85,7 +86,7 @@ export default function UpdateReservation() {
               value={timeTo}
             />
           </label>
-          <label>
+          {/* <label>
             <p>Place</p>
             <input
               onChange={(e) => setPlace(e.target.value)}
@@ -93,7 +94,20 @@ export default function UpdateReservation() {
               type="text"
               value={place}
             />
+          </label> */}
+          <label>
+            <p>Místo</p>
+            <select
+              onChange={(e) => setPlace(e.target.value)}
+              required
+              value={place}
+            >
+              {usePlaceQuery().data?.place.map((place) => (
+              <option key={place.id} value={place.id?.toString()}>{place.name}</option>
+              ))}
+            </select>
           </label>
+
           <label>
             <p>Charge</p>
             <input
