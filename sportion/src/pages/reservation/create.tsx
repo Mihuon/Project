@@ -2,14 +2,17 @@ import React, { FormEvent, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useCreateReservationMutation, usePlaceQuery } from '../../../generated/graphql';
 import { authUtils } from '../../firebase/authUtils';
+import { useAuthContext } from '@/components/auth-context-provider';
 
 export default function Page() {
+  const {user} = useAuthContext()
   const [name, setName] = useState('');
   const [timeFrom, setTimeFrom] = useState('');
   const [timeTo, setTimeTo] = useState('');
   const [place, setPlace] = useState('');
   const [charge, setCharge] = useState('');
   const [paid, setPaid] = useState(false);
+  const [profile, setUser] = useState(user?.uid);
 
   const router = useRouter();
   const [createReservation] = useCreateReservationMutation();
@@ -27,6 +30,7 @@ export default function Page() {
             place: place,
             charge: parseFloat(charge),
             paid: paid,
+            profile: profile
           },
         });
 
@@ -72,7 +76,6 @@ export default function Page() {
             <select
               onChange={(e) => setPlace(e.target.value)}
               required
-              value={place}
             >
               {usePlaceQuery().data?.place.map((place) => (
               <option key={place.id} value={place.id?.toString()}>{place.name}</option>

@@ -9,10 +9,14 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useReservationQuery, useDeleteReservationMutation, usePlaceQuery } from '../../generated/graphql';
+import { useAuthContext } from './auth-context-provider';
 
 const ReservationsTable = () => {
   const { data: reservationData } = useReservationQuery();
-  const { data: placeData } = usePlaceQuery(); // Fetch place data
+  const { data: placeData } = usePlaceQuery();
+  const { user } = useAuthContext();
+
+  const filteredReservationData = reservationData?.reservation.filter(reservation => user?.uid === reservation.profile);
 
   const [deleteReservation] = useDeleteReservationMutation();
   const handleDelete = async (reservationId: string) => {
@@ -30,10 +34,13 @@ const ReservationsTable = () => {
             <TableCell align="center">Od</TableCell>
             <TableCell align="center">Zaplaceno</TableCell>
             <TableCell align="center">Akce</TableCell>
+
+            <TableCell align="center">UID</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {reservationData?.reservation.map((reservation) => {
+
+          {filteredReservationData?.map((reservation) => {
             const place = placeData?.place.find((place) => place.id === reservation.place);
 
             return (
@@ -52,6 +59,7 @@ const ReservationsTable = () => {
                     Smazat
                   </Button>
                 </TableCell>
+                <TableCell align="center">{reservation.profile}</TableCell>
               </TableRow>
             );
           })}
@@ -63,7 +71,8 @@ const ReservationsTable = () => {
 
 export const ReservationTile = () => {
   return (
-    <Paper sx={{ maxWidth: 500 }}>
+    // <Paper sx={{ maxWidth: 500 }}>
+    <Paper>
       <Link href="/reservation/create">
         <MenuItem>Přidat</MenuItem>
       </Link>

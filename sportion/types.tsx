@@ -7,21 +7,20 @@ export type Reservation = {
     // timeTo:Datetime;
     timeFrom:number;
     timeTo:number;
-    // place:Place;  
     place:String;
     charge:Number;
     paid:Boolean;
+    profile:String;
 }
-
-//TODO
 export type Place = {
     id: String;
     name:String;
     cost:Number;
 }
-export type User = {
-    id: String;
+export type Profile = {
+    uid:String;
     name:String;
     surname:String;
-
+    credit:Number;
+    admin:Boolean
 }

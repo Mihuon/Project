@@ -11,11 +11,19 @@ const typeDefs = gql`
   type Query {
     users: [User!]!
     githubUsers: [GithubUser!]!
+    profile:[Profile!]!
     reservation: [Reservation!]!
     place: [Place!]!
   }
   type User {
     name: String
+  }
+  type Profile {
+    uid: String
+    name: String
+    surname: String
+    credit: Int
+    admin: Boolean
   }
   type GithubUser {
     id: ID!
@@ -24,18 +32,19 @@ const typeDefs = gql`
   }
   
   type Reservation {
-  id:String
-  name:String
+  id      : String
+  name    : String
   timeFrom: Int
-  timeTo: Int
-  place:String
-  charge:Int
-  paid:Boolean
+  timeTo  : Int
+  place   : String
+  charge  : Int
+  paid    : Boolean
+  profile : String
   }
   type Place {
-  id: String
-  name:String
-  cost:Int
+  id  : String
+  name: String
+  cost: Int
 }
   type Mutation {
   createReservation(
@@ -45,6 +54,8 @@ const typeDefs = gql`
     place: String
     charge: Int
     paid: Boolean
+    profile: String
+    
   ): Reservation
   updateReservation(
     id: String
@@ -85,6 +96,24 @@ const resolvers = {
 
             return [{ name: 'Nextjs' }];
         },
+        profile:async (context: Context) => {
+            const result = await db.collection('Profile').get();
+
+            const data = [];
+
+            result.forEach((doc) => {
+                const docData = doc.data();
+                data.push({
+                    uid: docData.uid,
+                    name: docData.name,
+                    surname: docData.surname,
+                    credit: docData.credit,
+                    admin: docData.admin
+                });
+            });
+            console.log(data);
+            return data;
+        },
         reservation: async (context: Context) => {
             const result = await db.collection('Reservation').get();
 
@@ -99,7 +128,8 @@ const resolvers = {
                     timeTo: docData.timeTo,
                     place: docData.place,
                     paid: docData.paid,
-                    charge: docData.charge
+                    charge: docData.charge,
+                    profile: docData.profile
                 });
             });
             console.log(data);
@@ -136,14 +166,15 @@ const resolvers = {
         }
     },
     Mutation: {
-        createReservation: (parent: unknown, args: { name: string, timeFrom: number, timeTo: number, place: string, charge: number, paid: boolean }) => {
+        createReservation: (parent: unknown, args: { name: string, timeFrom: number, timeTo: number, place: string, charge: number, paid: boolean, profile: string }) => {
             const reservation = {
                 name: args.name,
                 timeFrom: args.timeFrom,
                 timeTo: args.timeTo,
                 place: args.place,
                 charge: args.charge,
-                paid: args.paid
+                paid: args.paid,
+                profile: args.profile
             };
             db.collection('Reservation').add(reservation);
             return args;

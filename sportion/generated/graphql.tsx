@@ -44,6 +44,7 @@ export type MutationCreateReservationArgs = {
   name?: InputMaybe<Scalars['String']>;
   paid?: InputMaybe<Scalars['Boolean']>;
   place?: InputMaybe<Scalars['String']>;
+  profile?: InputMaybe<Scalars['String']>;
   timeFrom?: InputMaybe<Scalars['Int']>;
   timeTo?: InputMaybe<Scalars['Int']>;
 };
@@ -83,10 +84,20 @@ export type Place = {
   name?: Maybe<Scalars['String']>;
 };
 
+export type Profile = {
+  __typename?: 'Profile';
+  admin?: Maybe<Scalars['Boolean']>;
+  credit?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  surname?: Maybe<Scalars['String']>;
+  uid?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   githubUsers: Array<GithubUser>;
   place: Array<Place>;
+  profile: Array<Profile>;
   reservation: Array<Reservation>;
   users: Array<User>;
 };
@@ -98,6 +109,7 @@ export type Reservation = {
   name?: Maybe<Scalars['String']>;
   paid?: Maybe<Scalars['Boolean']>;
   place?: Maybe<Scalars['String']>;
+  profile?: Maybe<Scalars['String']>;
   timeFrom?: Maybe<Scalars['Int']>;
   timeTo?: Maybe<Scalars['Int']>;
 };
@@ -136,10 +148,15 @@ export type DeletePlaceMutationVariables = Exact<{
 
 export type DeletePlaceMutation = { __typename?: 'Mutation', deletePlace?: { __typename?: 'Place', id?: string | null } | null };
 
+export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ProfileQuery = { __typename?: 'Query', profile: Array<{ __typename?: 'Profile', uid?: string | null, name?: string | null, surname?: string | null, credit?: number | null, admin?: boolean | null }> };
+
 export type ReservationQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ReservationQuery = { __typename?: 'Query', reservation: Array<{ __typename?: 'Reservation', id?: string | null, name?: string | null, timeFrom?: number | null, timeTo?: number | null, place?: string | null, charge?: number | null, paid?: boolean | null }> };
+export type ReservationQuery = { __typename?: 'Query', reservation: Array<{ __typename?: 'Reservation', id?: string | null, name?: string | null, timeFrom?: number | null, timeTo?: number | null, place?: string | null, charge?: number | null, paid?: boolean | null, profile?: string | null }> };
 
 export type CreateReservationMutationVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
@@ -148,10 +165,11 @@ export type CreateReservationMutationVariables = Exact<{
   place?: InputMaybe<Scalars['String']>;
   charge?: InputMaybe<Scalars['Int']>;
   paid?: InputMaybe<Scalars['Boolean']>;
+  profile?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type CreateReservationMutation = { __typename?: 'Mutation', createReservation?: { __typename?: 'Reservation', id?: string | null, name?: string | null, timeFrom?: number | null, timeTo?: number | null, place?: string | null, charge?: number | null, paid?: boolean | null } | null };
+export type CreateReservationMutation = { __typename?: 'Mutation', createReservation?: { __typename?: 'Reservation', id?: string | null, name?: string | null, timeFrom?: number | null, timeTo?: number | null, place?: string | null, charge?: number | null, paid?: boolean | null, profile?: string | null } | null };
 
 export type UpdateReservationMutationVariables = Exact<{
   id: Scalars['String'];
@@ -316,6 +334,44 @@ export function useDeletePlaceMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeletePlaceMutationHookResult = ReturnType<typeof useDeletePlaceMutation>;
 export type DeletePlaceMutationResult = Apollo.MutationResult<DeletePlaceMutation>;
 export type DeletePlaceMutationOptions = Apollo.BaseMutationOptions<DeletePlaceMutation, DeletePlaceMutationVariables>;
+export const ProfileDocument = gql`
+    query Profile {
+  profile {
+    uid
+    name
+    surname
+    credit
+    admin
+  }
+}
+    `;
+
+/**
+ * __useProfileQuery__
+ *
+ * To run a query within a React component, call `useProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useProfileQuery(baseOptions?: Apollo.QueryHookOptions<ProfileQuery, ProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
+      }
+export function useProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProfileQuery, ProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
+        }
+export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>;
+export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
+export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVariables>;
 export const ReservationDocument = gql`
     query Reservation {
   reservation {
@@ -326,6 +382,7 @@ export const ReservationDocument = gql`
     place
     charge
     paid
+    profile
   }
 }
     `;
@@ -357,7 +414,7 @@ export type ReservationQueryHookResult = ReturnType<typeof useReservationQuery>;
 export type ReservationLazyQueryHookResult = ReturnType<typeof useReservationLazyQuery>;
 export type ReservationQueryResult = Apollo.QueryResult<ReservationQuery, ReservationQueryVariables>;
 export const CreateReservationDocument = gql`
-    mutation CreateReservation($name: String, $timeFrom: Int, $timeTo: Int, $place: String, $charge: Int, $paid: Boolean) {
+    mutation CreateReservation($name: String, $timeFrom: Int, $timeTo: Int, $place: String, $charge: Int, $paid: Boolean, $profile: String) {
   createReservation(
     name: $name
     timeFrom: $timeFrom
@@ -365,6 +422,7 @@ export const CreateReservationDocument = gql`
     place: $place
     charge: $charge
     paid: $paid
+    profile: $profile
   ) {
     id
     name
@@ -373,6 +431,7 @@ export const CreateReservationDocument = gql`
     place
     charge
     paid
+    profile
   }
 }
     `;
@@ -397,6 +456,7 @@ export type CreateReservationMutationFn = Apollo.MutationFunction<CreateReservat
  *      place: // value for 'place'
  *      charge: // value for 'charge'
  *      paid: // value for 'paid'
+ *      profile: // value for 'profile'
  *   },
  * });
  */

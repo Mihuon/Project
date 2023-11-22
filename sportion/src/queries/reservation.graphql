@@ -6,18 +6,20 @@ timeFrom,
 timeTo,
 place,
 charge,
-paid
+paid,
+profile,
 }
 }
-mutation CreateReservation($name: String, $timeFrom: Int, $timeTo: Int, $place: String,$charge:Int,$paid:Boolean){
-createReservation(name: $name,timeFrom: $timeFrom, timeTo: $timeTo, place: $place, charge: $charge, paid:$paid){
+mutation CreateReservation($name: String, $timeFrom: Int, $timeTo: Int, $place: String,$charge:Int,$paid:Boolean,$profile:String){
+createReservation(name: $name,timeFrom: $timeFrom, timeTo: $timeTo, place: $place, charge: $charge, paid:$paid, profile: $profile){
 id,
 name,
 timeFrom,
 timeTo,
 place,
 charge,
-paid
+paid,
+profile
 }
 }
 mutation UpdateReservation($id: String!, $name: String, $timeFrom: Int, $timeTo: Int, $place: String, $charge: Int, $paid: Boolean) {

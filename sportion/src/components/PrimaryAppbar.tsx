@@ -19,9 +19,14 @@ import { FC } from 'react';
 import { useAuthContext } from './auth-context-provider';
 import { authUtils } from '@/firebase/authUtils';
 import Link from 'next/link';
+import { ProfileDocument, useProfileQuery } from '../../generated/graphql';
+import { ProfileTail } from './profileTail';
+import { Avatar, CardHeader } from '@mui/material';
+import { blue, red } from '@mui/material/colors';
 type Props = {};
 
 export const PrimaryAppbar: FC<Props> = () => {
+  const { data } = useProfileQuery();
   const { user } = useAuthContext();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -48,6 +53,7 @@ export const PrimaryAppbar: FC<Props> = () => {
   };
 
   const menuId = 'primary-account-menu';
+  const profile = data?.profile.find((profile) => profile?.uid === user?.uid);
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -64,8 +70,26 @@ export const PrimaryAppbar: FC<Props> = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      {user?.email}
-      {user?.email == null ? (<Link key="login" href="./login"><MenuItem onClick={handleMenuClose}>Přihlásit se</MenuItem></Link>) : (<MenuItem onClick={authUtils.logout}>Odhlásit se</MenuItem>)}
+      
+      {user?.email != null ? (
+        <CardHeader
+        avatar={
+          <Avatar sx={{ bgcolor: blue[500] }}>
+            {`${profile?.name?.charAt(0)}${profile?.surname?.charAt(0)}`}
+          </Avatar>
+        }
+        // action={
+        //   <IconButton>
+        //     Detail
+        //   </IconButton>
+        // }
+        title={`${profile?.name} ${profile?.surname}`}
+        subheader={`${profile?.credit} Kč`}
+      />
+      )
+      :null}
+      {user?.email == null ? (<Link key="login" href="./login"><MenuItem onClick={handleMenuClose}>Přihlásit se</MenuItem></Link>) 
+      : (<MenuItem onClick={authUtils.logout}>Odhlásit se</MenuItem>)}
     </Menu>
   );
 
