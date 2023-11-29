@@ -8,14 +8,16 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useReservationQuery, useDeleteReservationMutation, usePlaceQuery } from '../../generated/graphql';
+import { useReservationQuery, useDeleteReservationMutation, usePlaceQuery, useProfileQuery } from '../../generated/graphql';
 import { useAuthContext } from './auth-context-provider';
 
 const ReservationsTable = () => {
   const { data: reservationData } = useReservationQuery();
   const { data: placeData } = usePlaceQuery();
+  const {data: profileData} = useProfileQuery();
   const { user } = useAuthContext();
-
+  const profile = profileData?.profile.find((profile) => profile?.uid === user?.uid);
+  //todo: filtrovat už na serveru, query myReservation
   const filteredReservationData = reservationData?.reservation.filter(reservation => user?.uid === reservation.profile);
 
   const [deleteReservation] = useDeleteReservationMutation();
@@ -33,9 +35,8 @@ const ReservationsTable = () => {
             <TableCell align="center">Místo</TableCell>
             <TableCell align="center">Od</TableCell>
             <TableCell align="center">Zaplaceno</TableCell>
+            <TableCell align="center">Potrvzeno</TableCell>
             <TableCell align="center">Akce</TableCell>
-
-            <TableCell align="center">UID</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -51,7 +52,12 @@ const ReservationsTable = () => {
                 <TableCell align="center">{place?.name}</TableCell>
                 <TableCell align="center">{reservation.timeFrom} - {reservation.timeTo}</TableCell>
                 <TableCell align="center">{reservation.paid ? 'Ano' : 'Ne'}</TableCell>
+                <TableCell align="center">{reservation.confirmed ? 'Ano' : 'Nepotvrzeno'}</TableCell>
                 <TableCell align="center">
+                <Link href={`/reservation/pay/${reservation.id}`}>
+                    <MenuItem>Zaplatit</MenuItem>
+                  </Link>
+                {profile?.admin == true ? (<Link href={`/reservation/confirm/${reservation.id}`}><MenuItem>Potvrdit</MenuItem></Link>) :null}
                   <Link href={`/reservation/update/${reservation.id}`}>
                     <MenuItem>Upravit</MenuItem>
                   </Link>
@@ -59,7 +65,6 @@ const ReservationsTable = () => {
                     Smazat
                   </Button>
                 </TableCell>
-                <TableCell align="center">{reservation.profile}</TableCell>
               </TableRow>
             );
           })}

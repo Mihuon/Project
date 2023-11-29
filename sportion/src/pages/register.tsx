@@ -1,17 +1,47 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import React, { FormEvent } from 'react';
-
+import React, { FormEvent, useState } from 'react';
 import { authUtils } from '../firebase/authUtils';
+import { useCreateProfileMutation } from '../../generated/graphql';
 
 function Page() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+
+  const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
+  const [credit, setCredit] = useState(0);
+  const [admin, setAdmin] = useState(false);
+  const [uid, setUid] = useState('');
+  const [paid, setPaid] = useState(false);
+
+  const [createProfile] = useCreateProfileMutation();
+
   const router = useRouter();
   const handleForm = async (event: FormEvent) => {
     event.preventDefault();
     await authUtils.register(email, password);
+
+    // const createProfileHandler = async () => {
+    //   try {
+    //     const result = await createProfile({
+    //       variables: {
+    //         name: name,
+    //         timeFrom: parseInt(timeFrom),
+    //         timeTo: parseInt(timeTo),
+    //         place: place,
+    //         charge: parseFloat(charge),
+    //         paid: paid,
+    //         profile: profile
+    //       },
+    //     });
+
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // };
+
     return router.push('/');
   };
   return (

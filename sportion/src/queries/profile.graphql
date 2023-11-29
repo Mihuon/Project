@@ -7,3 +7,12 @@ credit,
 admin
 }
 }
+mutation CreateProfile($uid:String, $name: String, $surname: String,$credit:Int,$admin:Boolean){
+createProfile(uid: $uid, name:$name, surname:$surname, credit:$credit, admin:$admin){
+uid,
+name,
+surname,
+credit,
+admin
+}
+}

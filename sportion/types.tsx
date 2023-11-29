@@ -10,6 +10,7 @@ export type Reservation = {
     place:String;
     charge:Number;
     paid:Boolean;
+    confirmed:Boolean;
     profile:String;
 }
 export type Place = {

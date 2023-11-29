@@ -16,6 +16,7 @@ console.log(data);
   const [place, setPlace] = useState('');
   const [charge, setCharge] = useState('');
   const [paid, setPaid] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
 
   useEffect(() => {
     if (id && data && data.reservation) {
@@ -28,6 +29,7 @@ console.log(data);
         setPlace(currentReservation.place);
         setCharge(currentReservation.charge.toString());
         setPaid(!!currentReservation.paid);
+        setConfirmed(!!currentReservation.confirmed);
       }
     }
   }, [id, data]);
@@ -45,6 +47,7 @@ console.log(data);
       place,
       charge: parseFloat(charge),
       paid,
+      confirmed,
     };
 
     const result = await updateReservation({
@@ -123,6 +126,17 @@ console.log(data);
               onChange={(e) => setPaid(e.target.value === 'true')}
               required
               value={paid ? 'true' : 'false'}
+            >
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </label>
+          <label>
+            <p>Confirmed</p>
+            <select
+              onChange={(e) => setConfirmed(e.target.value === 'true')}
+              required
+              value={confirmed ? 'true' : 'false'}
             >
               <option value="true">Yes</option>
               <option value="false">No</option>

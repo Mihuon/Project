@@ -32,19 +32,20 @@ const typeDefs = gql`
   }
   
   type Reservation {
-  id      : String
-  name    : String
+  id: String
+  name: String
   timeFrom: Int
-  timeTo  : Int
-  place   : String
-  charge  : Int
-  paid    : Boolean
-  profile : String
+  timeTo: Int
+  place: String
+  charge: Int
+  paid: Boolean
+  confirmed: Boolean
+  profile:String
   }
   type Place {
-  id  : String
-  name: String
-  cost: Int
+  id:String
+  name:String
+  cost:Int
 }
   type Mutation {
   createReservation(
@@ -54,8 +55,8 @@ const typeDefs = gql`
     place: String
     charge: Int
     paid: Boolean
+    confirmed: Boolean
     profile: String
-    
   ): Reservation
   updateReservation(
     id: String
@@ -65,10 +66,10 @@ const typeDefs = gql`
     place: String
     charge: Int
     paid: Boolean
+    confirmed: Boolean
   ): Reservation
   deleteReservation(id: String):Reservation
 
-  
   createPlace(
     name: String
     cost: Int
@@ -79,7 +80,15 @@ const typeDefs = gql`
     cost: Int
   ): Place
   deletePlace(id: String):Place
-}
+
+  createProfile(
+    uid: String
+    name: String
+    surname: String
+    credit: Int
+    admin: Boolean
+  ): Profile
+  }
 `;
 const db = firestore();
 const resolvers = {
@@ -96,7 +105,7 @@ const resolvers = {
 
             return [{ name: 'Nextjs' }];
         },
-        profile:async (context: Context) => {
+        profile: async (context: Context) => {
             const result = await db.collection('Profile').get();
 
             const data = [];
@@ -128,6 +137,7 @@ const resolvers = {
                     timeTo: docData.timeTo,
                     place: docData.place,
                     paid: docData.paid,
+                    confirmed: docData.confirmed,
                     charge: docData.charge,
                     profile: docData.profile
                 });
@@ -135,6 +145,11 @@ const resolvers = {
             console.log(data);
             return data;
         },
+        //autentikace zapsat
+        // myReservation:async(context:Context)=>{
+        //     const result = await db.collection('Reservation').get();
+        //     const data=[];
+        // },
         place: async (context: Context) => {
             const result = await db.collection('Place').get();
 
@@ -166,7 +181,7 @@ const resolvers = {
         }
     },
     Mutation: {
-        createReservation: (parent: unknown, args: { name: string, timeFrom: number, timeTo: number, place: string, charge: number, paid: boolean, profile: string }) => {
+        createReservation: (parent: unknown, args: { name: string, timeFrom: number, timeTo: number, place: string, charge: number, paid: boolean, confirmed:boolean, profile: string }) => {
             const reservation = {
                 name: args.name,
                 timeFrom: args.timeFrom,
@@ -174,19 +189,21 @@ const resolvers = {
                 place: args.place,
                 charge: args.charge,
                 paid: args.paid,
+                confirmed:args.confirmed,
                 profile: args.profile
             };
             db.collection('Reservation').add(reservation);
             return args;
         },
-        updateReservation: async (parent: unknown, args: { id: string, name: string, timeFrom: number, timeTo: number, place: string, charge: number, paid: boolean }) => {
+        updateReservation: async (parent: unknown, args: { id: string, name: string, timeFrom: number, timeTo: number, place: string, charge: number, paid: boolean, confirmed:boolean, }) => {
             const reservation = {
                 name: args.name,
                 timeFrom: args.timeFrom,
                 timeTo: args.timeTo,
                 place: args.place,
                 charge: args.charge,
-                paid: args.paid
+                paid: args.paid,
+                confirmed:args.confirmed
             };
             const reservationRef = db.collection('Reservation').doc(args.id);
             await reservationRef.update(reservation);
@@ -204,7 +221,7 @@ const resolvers = {
             return true;
         },
 
-        createPlace: (parent: unknown, args: { name: string, cost: number}) => {
+        createPlace: (parent: unknown, args: { name: string, cost: number }) => {
             const place = {
                 name: args.name,
                 cost: args.cost
@@ -212,7 +229,7 @@ const resolvers = {
             db.collection('Place').add(place);
             return args;
         },
-        updatePlace: async (parent: unknown, args: { id: string, name: string, cost: number}) => {
+        updatePlace: async (parent: unknown, args: { id: string, name: string, cost: number }) => {
             const place = {
                 name: args.name,
                 cost: args.cost
@@ -231,6 +248,17 @@ const resolvers = {
             await placeRef.delete();
 
             return true;
+        },
+        createProfile: (parent: unknown, args: { uid: string, name: string, surname: string, credit: number, admin: boolean }) => {
+            const profile = {
+                uid: args.uid,
+                name: args.name,
+                surname: args.surname,
+                credit: args.credit,
+                admin: args.admin,
+            };
+            db.collection('Profile').add(profile);
+            return args;
         }
     }
 };
@@ -253,5 +281,6 @@ export default createYoga({
         return {
             user: auth ? await verifyToken(auth) : undefined,
         } as Context;
+        // console.log(context);
     },
 });
