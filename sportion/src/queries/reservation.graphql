@@ -11,6 +11,19 @@ confirmed,
 profile,
 }
 }
+query MyReservation($uid:String!){
+myReservation(uid:$uid){
+id,
+name,
+timeFrom,
+timeTo,
+place,
+charge,
+paid,
+confirmed,
+profile,
+}
+}
 mutation CreateReservation($name: String, $timeFrom: Int, $timeTo: Int, $place: String,$charge:Int,$paid:Boolean,$confirmed:Boolean,$profile:String){
 createReservation(name: $name,timeFrom: $timeFrom, timeTo: $timeTo, place: $place, charge: $charge, paid:$paid, confirmed: $confirmed, profile: $profile){
 id,

@@ -7,8 +7,26 @@ credit,
 admin
 }
 }
+query MyProfile($userUid:String!){
+myProfile(userUid:$userUid){
+uid,
+name,
+surname,
+credit,
+admin
+}
+}
 mutation CreateProfile($uid:String, $name: String, $surname: String,$credit:Int,$admin:Boolean){
 createProfile(uid: $uid, name:$name, surname:$surname, credit:$credit, admin:$admin){
+uid,
+name,
+surname,
+credit,
+admin
+}
+}
+mutation UpdateProfile($uid:String, $name: String, $surname: String,$credit:Int,$admin:Boolean){
+updateProfile(uid: $uid, name:$name, surname:$surname, credit:$credit, admin:$admin){
 uid,
 name,
 surname,

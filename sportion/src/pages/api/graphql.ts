@@ -13,6 +13,8 @@ const typeDefs = gql`
     githubUsers: [GithubUser!]!
     profile:[Profile!]!
     reservation: [Reservation!]!
+    myReservation(uid:String!):[Reservation!]!
+    myProfile(userUid:String!):[Profile!]!
     place: [Place!]!
   }
   type User {
@@ -25,13 +27,30 @@ const typeDefs = gql`
     credit: Int
     admin: Boolean
   }
+  type MyProfile {
+    uid: String
+    name: String
+    surname: String
+    credit: Int
+    admin: Boolean
+  }
   type GithubUser {
     id: ID!
     login: String!
     avatarUrl: String!
   }
-  
   type Reservation {
+  id: String
+  name: String
+  timeFrom: Int
+  timeTo: Int
+  place: String
+  charge: Int
+  paid: Boolean
+  confirmed: Boolean
+  profile:String
+  }
+  type MyReservation {
   id: String
   name: String
   timeFrom: Int
@@ -88,6 +107,14 @@ const typeDefs = gql`
     credit: Int
     admin: Boolean
   ): Profile
+  updateProfile(
+  id:String
+    uid: String
+    name: String
+    surname: String
+    credit: Int
+    admin: Boolean
+  ): Profile
   }
 `;
 const db = firestore();
@@ -120,7 +147,25 @@ const resolvers = {
                     admin: docData.admin
                 });
             });
-            console.log(data);
+            // console.log(data);
+            return data;
+        },
+        myProfile: async (parent: unknown, args: { userUid: string }, context: Context) => {
+            const result = await db.collection('Profile').where('uid', '==', args.userUid).get();
+
+            const data = [];
+
+            result.forEach((doc) => {
+                const docData = doc.data();
+                data.push({
+                    uid: docData.uid,
+                    name: docData.name,
+                    surname: docData.surname,
+                    credit: docData.credit,
+                    admin: docData.admin
+                });
+            });
+            // console.log(data);
             return data;
         },
         reservation: async (context: Context) => {
@@ -142,14 +187,32 @@ const resolvers = {
                     profile: docData.profile
                 });
             });
-            console.log(data);
+            // console.log(data);
+            return data;
+        },
+        myReservation: async (parent: unknown, args: { uid: string }, context: Context) => {
+            const result = await db.collection('Reservation').where('profile', '==', args.uid).get();
+
+            const data = [];
+
+            result.forEach((doc) => {
+                const docData = doc.data();
+                data.push({
+                    id: doc.id,
+                    name: docData.name,
+                    timeFrom: docData.timeFrom,
+                    timeTo: docData.timeTo,
+                    place: docData.place,
+                    paid: docData.paid,
+                    confirmed: docData.confirmed,
+                    charge: docData.charge,
+                    profile: docData.profile
+                });
+            });
+            // console.log(data);
             return data;
         },
         //autentikace zapsat
-        // myReservation:async(context:Context)=>{
-        //     const result = await db.collection('Reservation').get();
-        //     const data=[];
-        // },
         place: async (context: Context) => {
             const result = await db.collection('Place').get();
 
@@ -163,7 +226,7 @@ const resolvers = {
                     cost: docData.cost
                 });
             });
-            console.log(data);
+            // console.log(data);
             return data;
         },
         githubUsers: async () => {
@@ -181,7 +244,7 @@ const resolvers = {
         }
     },
     Mutation: {
-        createReservation: (parent: unknown, args: { name: string, timeFrom: number, timeTo: number, place: string, charge: number, paid: boolean, confirmed:boolean, profile: string }) => {
+        createReservation: (parent: unknown, args: { name: string, timeFrom: number, timeTo: number, place: string, charge: number, paid: boolean, confirmed: boolean, profile: string }) => {
             const reservation = {
                 name: args.name,
                 timeFrom: args.timeFrom,
@@ -189,13 +252,13 @@ const resolvers = {
                 place: args.place,
                 charge: args.charge,
                 paid: args.paid,
-                confirmed:args.confirmed,
+                confirmed: args.confirmed,
                 profile: args.profile
             };
             db.collection('Reservation').add(reservation);
             return args;
         },
-        updateReservation: async (parent: unknown, args: { id: string, name: string, timeFrom: number, timeTo: number, place: string, charge: number, paid: boolean, confirmed:boolean, }) => {
+        updateReservation: async (parent: unknown, args: { id: string, name: string, timeFrom: number, timeTo: number, place: string, charge: number, paid: boolean, confirmed: boolean, }) => {
             const reservation = {
                 name: args.name,
                 timeFrom: args.timeFrom,
@@ -203,7 +266,7 @@ const resolvers = {
                 place: args.place,
                 charge: args.charge,
                 paid: args.paid,
-                confirmed:args.confirmed
+                confirmed: args.confirmed
             };
             const reservationRef = db.collection('Reservation').doc(args.id);
             await reservationRef.update(reservation);
@@ -259,6 +322,23 @@ const resolvers = {
             };
             db.collection('Profile').add(profile);
             return args;
+        },
+        updateProfile: async (parent: unknown, args: { id: string, uid: string, name: string, surname: string, credit: number, admin: boolean }) => {
+            const profile = {
+                uid: args.uid,
+                name: args.name,
+                surname: args.surname,
+                credit: args.credit,
+                admin: args.admin,
+            };
+            const profileRef = db.collection('Profile').doc(args.id);
+            await profileRef.update(profile);
+
+            const updatedProfile = await profileRef.get();
+            return {
+                id: args.id,
+                ...updatedProfile.data()
+            };
         }
     }
 };
@@ -277,10 +357,9 @@ export default createYoga({
     context: async (context) => {
         const auth = context.request.headers.get('authorization');
         //! SMAZAT CONSOLE LOG
-        console.log(auth);
+        // console.log(auth);
         return {
             user: auth ? await verifyToken(auth) : undefined,
         } as Context;
-        // console.log(context);
     },
 });
