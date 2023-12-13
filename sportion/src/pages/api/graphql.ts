@@ -6,6 +6,10 @@ import { createSchema, createYoga } from 'graphql-yoga';
 
 import { firestore } from '../../server/firebase-admin-config';
 import { verifyToken } from '../../server/verifyToken';
+import { DecodedIdToken } from 'firebase-admin/auth';
+import { profile } from 'console';
+
+type MyContext = { user?: DecodedIdToken };
 
 const typeDefs = gql`
   type Query {
@@ -13,14 +17,15 @@ const typeDefs = gql`
     githubUsers: [GithubUser!]!
     profile:[Profile!]!
     reservation: [Reservation!]!
-    myReservation(uid:String!):[Reservation!]!
-    myProfile(userUid:String!):[Profile!]!
+    myReservation:[Reservation!]!
+    myProfile:[Profile!]!
     place: [Place!]!
   }
   type User {
     name: String
   }
   type Profile {
+  id: String
     uid: String
     name: String
     surname: String
@@ -28,6 +33,7 @@ const typeDefs = gql`
     admin: Boolean
   }
   type MyProfile {
+  id: String
     uid: String
     name: String
     surname: String
@@ -115,6 +121,10 @@ const typeDefs = gql`
     credit: Int
     admin: Boolean
   ): Profile
+  updateCreditProfile(
+  id:String
+    credit: Int
+  ): Profile
   }
 `;
 const db = firestore();
@@ -140,6 +150,7 @@ const resolvers = {
             result.forEach((doc) => {
                 const docData = doc.data();
                 data.push({
+                    id: doc.id,
                     uid: docData.uid,
                     name: docData.name,
                     surname: docData.surname,
@@ -150,14 +161,17 @@ const resolvers = {
             // console.log(data);
             return data;
         },
-        myProfile: async (parent: unknown, args: { userUid: string }, context: Context) => {
-            const result = await db.collection('Profile').where('uid', '==', args.userUid).get();
+        myProfile: async (parent: unknown, args: unknown, context: MyContext) => {
+            const user = context.user;
+            console.log(`User: ${JSON.stringify(user)}`);
+            const result = await db.collection('Profile').where('uid', '==', user?.uid).get();
 
             const data = [];
 
             result.forEach((doc) => {
                 const docData = doc.data();
                 data.push({
+                    id: doc.id,
                     uid: docData.uid,
                     name: docData.name,
                     surname: docData.surname,
@@ -190,9 +204,10 @@ const resolvers = {
             // console.log(data);
             return data;
         },
-        myReservation: async (parent: unknown, args: { uid: string }, context: Context) => {
-            const result = await db.collection('Reservation').where('profile', '==', args.uid).get();
-
+        myReservation: async (parent: unknown, args: unknown, context: MyContext) => {
+            const user = context.user;
+            console.log(`User: ${JSON.stringify(user)}`);
+            const result = await db.collection('Reservation').where('profile', '==', user?.uid).get();
             const data = [];
 
             result.forEach((doc) => {
@@ -330,6 +345,19 @@ const resolvers = {
                 surname: args.surname,
                 credit: args.credit,
                 admin: args.admin,
+            };
+            const profileRef = db.collection('Profile').doc(args.id);
+            await profileRef.update(profile);
+
+            const updatedProfile = await profileRef.get();
+            return {
+                id: args.id,
+                ...updatedProfile.data()
+            };
+        },
+        updateCreditProfile: async (parent: unknown, args: { id: string, credit: number }) => {
+            const profile = {
+                credit: args.credit
             };
             const profileRef = db.collection('Profile').doc(args.id);
             await profileRef.update(profile);

@@ -8,35 +8,23 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useDeleteReservationMutation, usePlaceQuery, useProfileQuery, useMyReservationQuery, useMyReservationLazyQuery, useMyProfileLazyQuery } from '../../generated/graphql';
+import { useDeleteReservationMutation, usePlaceQuery, useProfileQuery, useMyReservationQuery, useMyReservationLazyQuery, useMyProfileLazyQuery, useMyProfileQuery } from '../../generated/graphql';
 import { useAuthContext } from './auth-context-provider';
 
 const ReservationsTable = () => {
-  // const { data: reservationData } = useReservationQuery();
   const { data: placeData } = usePlaceQuery();
-  const { data: profileData } = useProfileQuery();
-  // const profile = profileData?.profile.find((profile) => profile?.uid === user?.uid);
+  // const { data: profileData } = useProfileQuery();
 
   const { user } = useAuthContext();
 
-  const [reservation, { data: myReservationData }] = useMyReservationLazyQuery();
-  useEffect(() => {
-    if (user != null) {
-      reservation({ variables: { uid: user?.uid } });
-    }
-  }, [reservation, user]
-  )
+  const {data:myReservationData} = useMyReservationQuery();
 
-  const [profile, { data: myProfileData }] = useMyProfileLazyQuery();
-  useEffect(() => {
-    if (user != null) {
-      profile({ variables: { userUid: user?.uid } });
-    }
-  }, [profile, user]
-  )
-
-  //todo: filtrovat už na serveru, query myReservation
-  // const filteredReservationData = reservationData?.reservation.filter(reservation => user?.uid === reservation.profile);
+  const {data:myProfileData} = useMyProfileQuery()
+  const profileData = myProfileData?.myProfile.find((profile)=> profile.uid === user?.uid);
+  
+  console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+  console.log(myProfileData);
+  console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 
   const [deleteReservation] = useDeleteReservationMutation();
   const handleDelete = async (reservationId: string) => {
@@ -73,11 +61,11 @@ const ReservationsTable = () => {
                 <TableCell align="center">{reservation.confirmed ? 'Ano' : 'Nepotvrzeno'}</TableCell>
                 <TableCell align="center">
                   <Link href={`/reservation/pay/${reservation.id}`}>
-                    <MenuItem>Zaplatit</MenuItem>
+                    {(reservation.paid != true && reservation.confirmed == true) ? <MenuItem>Zaplatit</MenuItem> : null}
                   </Link>
-                  {myProfileData?.myProfile.find((profile)=> profile.uid === user?.uid)?.admin == true ? (<Link href={`/reservation/confirm/${reservation.id}`}><MenuItem>Potvrdit</MenuItem></Link>) : null}
+                  {(profileData?.admin == true && reservation.confirmed != true)? <Link href={`/reservation/confirm/${reservation.id}`}><MenuItem>Potvrdit</MenuItem></Link> : null}
                   <Link href={`/reservation/update/${reservation.id}`}>
-                    <MenuItem>Upravit</MenuItem>
+                    {(reservation.confirmed != true || profileData?.admin == true)? <MenuItem>Upravit</MenuItem>:null}
                   </Link>
                   <Button color="error" onClick={() => handleDelete(reservation.id)}>
                     Smazat

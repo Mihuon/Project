@@ -29,6 +29,7 @@ export type Mutation = {
   createReservation?: Maybe<Reservation>;
   deletePlace?: Maybe<Place>;
   deleteReservation?: Maybe<Reservation>;
+  updateCreditProfile?: Maybe<Profile>;
   updatePlace?: Maybe<Place>;
   updateProfile?: Maybe<Profile>;
   updateReservation?: Maybe<Reservation>;
@@ -72,6 +73,12 @@ export type MutationDeleteReservationArgs = {
 };
 
 
+export type MutationUpdateCreditProfileArgs = {
+  credit?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdatePlaceArgs = {
   cost?: InputMaybe<Scalars['Int']>;
   id?: InputMaybe<Scalars['String']>;
@@ -104,6 +111,7 @@ export type MyProfile = {
   __typename?: 'MyProfile';
   admin?: Maybe<Scalars['Boolean']>;
   credit?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   surname?: Maybe<Scalars['String']>;
   uid?: Maybe<Scalars['String']>;
@@ -133,6 +141,7 @@ export type Profile = {
   __typename?: 'Profile';
   admin?: Maybe<Scalars['Boolean']>;
   credit?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   surname?: Maybe<Scalars['String']>;
   uid?: Maybe<Scalars['String']>;
@@ -147,16 +156,6 @@ export type Query = {
   profile: Array<Profile>;
   reservation: Array<Reservation>;
   users: Array<User>;
-};
-
-
-export type QueryMyProfileArgs = {
-  userUid: Scalars['String'];
-};
-
-
-export type QueryMyReservationArgs = {
-  uid: Scalars['String'];
 };
 
 export type Reservation = {
@@ -209,14 +208,12 @@ export type DeletePlaceMutation = { __typename?: 'Mutation', deletePlace?: { __t
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: Array<{ __typename?: 'Profile', uid?: string | null, name?: string | null, surname?: string | null, credit?: number | null, admin?: boolean | null }> };
+export type ProfileQuery = { __typename?: 'Query', profile: Array<{ __typename?: 'Profile', id?: string | null, uid?: string | null, name?: string | null, surname?: string | null, credit?: number | null, admin?: boolean | null }> };
 
-export type MyProfileQueryVariables = Exact<{
-  userUid: Scalars['String'];
-}>;
+export type MyProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyProfileQuery = { __typename?: 'Query', myProfile: Array<{ __typename?: 'Profile', uid?: string | null, name?: string | null, surname?: string | null, credit?: number | null, admin?: boolean | null }> };
+export type MyProfileQuery = { __typename?: 'Query', myProfile: Array<{ __typename?: 'Profile', id?: string | null, uid?: string | null, name?: string | null, surname?: string | null, credit?: number | null, admin?: boolean | null }> };
 
 export type CreateProfileMutationVariables = Exact<{
   uid?: InputMaybe<Scalars['String']>;
@@ -227,9 +224,10 @@ export type CreateProfileMutationVariables = Exact<{
 }>;
 
 
-export type CreateProfileMutation = { __typename?: 'Mutation', createProfile?: { __typename?: 'Profile', uid?: string | null, name?: string | null, surname?: string | null, credit?: number | null, admin?: boolean | null } | null };
+export type CreateProfileMutation = { __typename?: 'Mutation', createProfile?: { __typename?: 'Profile', id?: string | null, uid?: string | null, name?: string | null, surname?: string | null, credit?: number | null, admin?: boolean | null } | null };
 
 export type UpdateProfileMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['String']>;
   uid?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   surname?: InputMaybe<Scalars['String']>;
@@ -238,16 +236,22 @@ export type UpdateProfileMutationVariables = Exact<{
 }>;
 
 
-export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile?: { __typename?: 'Profile', uid?: string | null, name?: string | null, surname?: string | null, credit?: number | null, admin?: boolean | null } | null };
+export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile?: { __typename?: 'Profile', id?: string | null, uid?: string | null, name?: string | null, surname?: string | null, credit?: number | null, admin?: boolean | null } | null };
+
+export type UpdateCreditProfileMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['String']>;
+  credit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type UpdateCreditProfileMutation = { __typename?: 'Mutation', updateCreditProfile?: { __typename?: 'Profile', id?: string | null, credit?: number | null } | null };
 
 export type ReservationQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ReservationQuery = { __typename?: 'Query', reservation: Array<{ __typename?: 'Reservation', id?: string | null, name?: string | null, timeFrom?: number | null, timeTo?: number | null, place?: string | null, charge?: number | null, paid?: boolean | null, confirmed?: boolean | null, profile?: string | null }> };
 
-export type MyReservationQueryVariables = Exact<{
-  uid: Scalars['String'];
-}>;
+export type MyReservationQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MyReservationQuery = { __typename?: 'Query', myReservation: Array<{ __typename?: 'Reservation', id?: string | null, name?: string | null, timeFrom?: number | null, timeTo?: number | null, place?: string | null, charge?: number | null, paid?: boolean | null, confirmed?: boolean | null, profile?: string | null }> };
@@ -433,6 +437,7 @@ export type DeletePlaceMutationOptions = Apollo.BaseMutationOptions<DeletePlaceM
 export const ProfileDocument = gql`
     query Profile {
   profile {
+    id
     uid
     name
     surname
@@ -469,8 +474,9 @@ export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>;
 export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
 export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVariables>;
 export const MyProfileDocument = gql`
-    query MyProfile($userUid: String!) {
-  myProfile(userUid: $userUid) {
+    query MyProfile {
+  myProfile {
+    id
     uid
     name
     surname
@@ -492,11 +498,10 @@ export const MyProfileDocument = gql`
  * @example
  * const { data, loading, error } = useMyProfileQuery({
  *   variables: {
- *      userUid: // value for 'userUid'
  *   },
  * });
  */
-export function useMyProfileQuery(baseOptions: Apollo.QueryHookOptions<MyProfileQuery, MyProfileQueryVariables>) {
+export function useMyProfileQuery(baseOptions?: Apollo.QueryHookOptions<MyProfileQuery, MyProfileQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<MyProfileQuery, MyProfileQueryVariables>(MyProfileDocument, options);
       }
@@ -516,6 +521,7 @@ export const CreateProfileDocument = gql`
     credit: $credit
     admin: $admin
   ) {
+    id
     uid
     name
     surname
@@ -555,14 +561,16 @@ export type CreateProfileMutationHookResult = ReturnType<typeof useCreateProfile
 export type CreateProfileMutationResult = Apollo.MutationResult<CreateProfileMutation>;
 export type CreateProfileMutationOptions = Apollo.BaseMutationOptions<CreateProfileMutation, CreateProfileMutationVariables>;
 export const UpdateProfileDocument = gql`
-    mutation UpdateProfile($uid: String, $name: String, $surname: String, $credit: Int, $admin: Boolean) {
+    mutation UpdateProfile($id: String, $uid: String, $name: String, $surname: String, $credit: Int, $admin: Boolean) {
   updateProfile(
+    id: $id
     uid: $uid
     name: $name
     surname: $surname
     credit: $credit
     admin: $admin
   ) {
+    id
     uid
     name
     surname
@@ -586,6 +594,7 @@ export type UpdateProfileMutationFn = Apollo.MutationFunction<UpdateProfileMutat
  * @example
  * const [updateProfileMutation, { data, loading, error }] = useUpdateProfileMutation({
  *   variables: {
+ *      id: // value for 'id'
  *      uid: // value for 'uid'
  *      name: // value for 'name'
  *      surname: // value for 'surname'
@@ -601,6 +610,41 @@ export function useUpdateProfileMutation(baseOptions?: Apollo.MutationHookOption
 export type UpdateProfileMutationHookResult = ReturnType<typeof useUpdateProfileMutation>;
 export type UpdateProfileMutationResult = Apollo.MutationResult<UpdateProfileMutation>;
 export type UpdateProfileMutationOptions = Apollo.BaseMutationOptions<UpdateProfileMutation, UpdateProfileMutationVariables>;
+export const UpdateCreditProfileDocument = gql`
+    mutation UpdateCreditProfile($id: String, $credit: Int) {
+  updateCreditProfile(id: $id, credit: $credit) {
+    id
+    credit
+  }
+}
+    `;
+export type UpdateCreditProfileMutationFn = Apollo.MutationFunction<UpdateCreditProfileMutation, UpdateCreditProfileMutationVariables>;
+
+/**
+ * __useUpdateCreditProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateCreditProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCreditProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCreditProfileMutation, { data, loading, error }] = useUpdateCreditProfileMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      credit: // value for 'credit'
+ *   },
+ * });
+ */
+export function useUpdateCreditProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCreditProfileMutation, UpdateCreditProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCreditProfileMutation, UpdateCreditProfileMutationVariables>(UpdateCreditProfileDocument, options);
+      }
+export type UpdateCreditProfileMutationHookResult = ReturnType<typeof useUpdateCreditProfileMutation>;
+export type UpdateCreditProfileMutationResult = Apollo.MutationResult<UpdateCreditProfileMutation>;
+export type UpdateCreditProfileMutationOptions = Apollo.BaseMutationOptions<UpdateCreditProfileMutation, UpdateCreditProfileMutationVariables>;
 export const ReservationDocument = gql`
     query Reservation {
   reservation {
@@ -644,8 +688,8 @@ export type ReservationQueryHookResult = ReturnType<typeof useReservationQuery>;
 export type ReservationLazyQueryHookResult = ReturnType<typeof useReservationLazyQuery>;
 export type ReservationQueryResult = Apollo.QueryResult<ReservationQuery, ReservationQueryVariables>;
 export const MyReservationDocument = gql`
-    query MyReservation($uid: String!) {
-  myReservation(uid: $uid) {
+    query MyReservation {
+  myReservation {
     id
     name
     timeFrom
@@ -671,11 +715,10 @@ export const MyReservationDocument = gql`
  * @example
  * const { data, loading, error } = useMyReservationQuery({
  *   variables: {
- *      uid: // value for 'uid'
  *   },
  * });
  */
-export function useMyReservationQuery(baseOptions: Apollo.QueryHookOptions<MyReservationQuery, MyReservationQueryVariables>) {
+export function useMyReservationQuery(baseOptions?: Apollo.QueryHookOptions<MyReservationQuery, MyReservationQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<MyReservationQuery, MyReservationQueryVariables>(MyReservationDocument, options);
       }

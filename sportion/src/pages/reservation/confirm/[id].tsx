@@ -68,7 +68,7 @@ console.log(data);
       <p>Charge: {charge}</p>
 
       <button onClick={handleConfirmation} type="button">
-        Confirm Confirmation
+        Confirm Reservation
       </button>
     </div>
     </div>

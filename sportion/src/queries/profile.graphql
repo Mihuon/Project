@@ -1,5 +1,6 @@
 query Profile{
 profile{
+id,
 uid,
 name,
 surname,
@@ -7,8 +8,9 @@ credit,
 admin
 }
 }
-query MyProfile($userUid:String!){
-myProfile(userUid:$userUid){
+query MyProfile{
+myProfile{
+id,
 uid,
 name,
 surname,
@@ -18,6 +20,7 @@ admin
 }
 mutation CreateProfile($uid:String, $name: String, $surname: String,$credit:Int,$admin:Boolean){
 createProfile(uid: $uid, name:$name, surname:$surname, credit:$credit, admin:$admin){
+id,
 uid,
 name,
 surname,
@@ -25,12 +28,19 @@ credit,
 admin
 }
 }
-mutation UpdateProfile($uid:String, $name: String, $surname: String,$credit:Int,$admin:Boolean){
-updateProfile(uid: $uid, name:$name, surname:$surname, credit:$credit, admin:$admin){
+mutation UpdateProfile($id: String, $uid:String, $name: String, $surname: String,$credit:Int,$admin:Boolean){
+updateProfile(id:$id, uid: $uid, name:$name, surname:$surname, credit:$credit, admin:$admin){
+id,
 uid,
 name,
 surname,
 credit,
 admin
+}
+}
+mutation UpdateCreditProfile($id:String, $credit:Int){
+updateCreditProfile(id:$id, credit:$credit){
+id,
+credit
 }
 }

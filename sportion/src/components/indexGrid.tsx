@@ -2,6 +2,7 @@ import { Grid } from "@mui/material";
 import { FC } from "react";
 import { ReservationTile } from "./reservationTile";
 import { PlaceTile } from "./placeTile";
+import { ProfilesTile } from "./profilesTile";
 type Props = {};
 
 export const IndexGrid: FC<Props> = () => {
@@ -15,11 +16,11 @@ export const IndexGrid: FC<Props> = () => {
           <PlaceTile/>
         </Grid>
         
-        {/* <Grid item>
-          <ReservationTile/>
+        <Grid item>
+          <ProfilesTile/>
         </Grid>
         
-        <Grid item>
+        {/* <Grid item>
           <ReservationTile/>
         </Grid>
         

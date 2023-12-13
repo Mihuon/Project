@@ -11,8 +11,8 @@ confirmed,
 profile,
 }
 }
-query MyReservation($uid:String!){
-myReservation(uid:$uid){
+query MyReservation{
+myReservation{
 id,
 name,
 timeFrom,
