@@ -15,9 +15,9 @@ function Page() {
     return router.push('/');
   };
   return (
-    <div>
+    <div className="wrapper">
       <div className="form-wrapper">
-        <h1>Login</h1>
+        <h1>Přihlásit se</h1>
         <form onSubmit={handleForm} className="form">
           <label htmlFor="email">
             <p>Email</p>
@@ -31,7 +31,7 @@ function Page() {
             />
           </label>
           <label htmlFor="password">
-            <p>Password</p>
+            <p>Heslo</p>
             <input
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -43,7 +43,7 @@ function Page() {
           </label>
           <button type="submit">Login</button>
         </form>
-        <a href="../register">Create profile</a>
+        <a className='register' href="../register">Create profile</a>
       </div>
     </div>
   );

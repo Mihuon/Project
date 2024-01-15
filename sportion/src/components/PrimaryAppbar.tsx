@@ -19,16 +19,17 @@ import { FC } from 'react';
 import { useAuthContext } from './auth-context-provider';
 import { authUtils } from '@/firebase/authUtils';
 import Link from 'next/link';
-import { ProfileDocument, useProfileQuery } from '../../generated/graphql';
-import { ProfileTail } from './profileTail';
+import {useMyProfileQuery } from '../../generated/graphql';
+import { ProfileTile } from './profileTile';
 import { Avatar, CardHeader } from '@mui/material';
 import { blue, red } from '@mui/material/colors';
 type Props = {};
 
 export const PrimaryAppbar: FC<Props> = () => {
-  const { data } = useProfileQuery();
   const { user } = useAuthContext();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { data } = useMyProfileQuery({skip:!user});
+  const profileData = data?.myProfile.find((profile) => profile?.uid === user?.uid);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
 
@@ -53,7 +54,6 @@ export const PrimaryAppbar: FC<Props> = () => {
   };
 
   const menuId = 'primary-account-menu';
-  const profile = data?.profile.find((profile) => profile?.uid === user?.uid);
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -72,10 +72,14 @@ export const PrimaryAppbar: FC<Props> = () => {
     >
       
       {user?.email != null ? (
+        <div>
+          <Link href={`/profile/modify/${profileData?.id}`}>
+                    <MenuItem>Upravit</MenuItem>
+                  </Link>
         <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: blue[500] }}>
-            {`${profile?.name?.charAt(0)}${profile?.surname?.charAt(0)}`}
+            {`${profileData?.name?.charAt(0)}${profileData?.surname?.charAt(0)}`}
           </Avatar>
         }
         // action={
@@ -83,9 +87,9 @@ export const PrimaryAppbar: FC<Props> = () => {
         //     Detail
         //   </IconButton>
         // }
-        title={`${profile?.name} ${profile?.surname}`}
-        subheader={`${profile?.credit} Kč`}
-      />
+        title={`${profileData?.name} ${profileData?.surname}`}
+        subheader={`${profileData?.credit} Kč`}
+      /></div>
       )
       :null}
       {user?.email == null ? (<Link key="login" href="./login"><MenuItem onClick={handleMenuClose}>Přihlásit se</MenuItem></Link>) 
@@ -143,17 +147,17 @@ export const PrimaryAppbar: FC<Props> = () => {
     </Menu>
   );
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box  sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar>
-          <IconButton
+        <Toolbar className='appBar' >
+          {/* <IconButton
             size="large"
             edge="start"
             color="inherit"
             sx={{ mr: 2 }}
           >
             <MenuIcon />
-          </IconButton>
+          </IconButton> */}
           <Typography
             variant="h6"
             noWrap
@@ -165,14 +169,14 @@ export const PrimaryAppbar: FC<Props> = () => {
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton
+            {/* <IconButton
               size="large"
               color="inherit"
             >
               <Badge badgeContent={0} color="error">
                 <NotificationsIcon />
               </Badge>
-            </IconButton>
+            </IconButton> */}
             <IconButton
               size="large"
               edge="end"

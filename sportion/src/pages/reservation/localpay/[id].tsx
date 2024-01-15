@@ -4,9 +4,8 @@ import {
   useReservationQuery,
   useUpdateReservationMutation,
   useUpdateCreditProfileMutation,
-  usePlaceQuery,
-  useMyProfileLazyQuery,
-  useMyProfileQuery
+  useMyProfileQuery,
+  usePlaceQuery
 } from '../../../../generated/graphql';
 import { useAuthContext } from '@/components/auth-context-provider';
 
@@ -27,8 +26,8 @@ export default function UpdateReservation() {
   const [confirmed, setConfirmed] = useState(false);
 
   const { user } = useAuthContext();
-
-  const { data: myProfileData } = useMyProfileQuery()
+  
+  const {data:myProfileData} = useMyProfileQuery()
 
   useEffect(() => {
     if (id && data && data.reservation) {
@@ -54,13 +53,11 @@ export default function UpdateReservation() {
 
     const userProfile = myProfileData?.myProfile.find((profile) => profile.uid === user?.uid);
 
-    if (userProfile && paid != true && confirmed == true && userProfile.credit >= parseFloat(charge)) {
-      const updatedProfileCredit = userProfile.credit - parseFloat(charge);
+    if (userProfile && paid != true && confirmed == true) {
 
       const result = await updateProfile({
         variables: {
           id: userProfile.id,
-          credit: updatedProfileCredit,
         },
       });
 
@@ -85,13 +82,12 @@ export default function UpdateReservation() {
     }
   };
 
-  //box a typography
   const { data: placeData } = usePlaceQuery();
   return (
     <div>
       {myProfileData?.myProfile.find((profile) => profile.uid === user?.uid)?.credit}
       <div className="form-wrapper">
-        <h1>Zapltit rezervaci</h1>
+        <h1>Confirm Reservation</h1>
         <p>Název: {name}</p>
         <p>Čas: {`${new Date(timeFrom).toLocaleTimeString([], {
           hour: '2-digit',
@@ -100,8 +96,9 @@ export default function UpdateReservation() {
         </p>
         <p>Místo: {placeData?.place.find((plc) => plc.id === place)?.name}</p>
         <p>Cena: {charge} Kč</p>
+
         <button onClick={handlePayment} type="button">
-          Confirm Payment
+        Zaplatit
         </button>
       </div>
     </div>

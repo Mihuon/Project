@@ -3,15 +3,21 @@ import { Context } from '@apollo/client';
 import axios from 'axios';
 import { gql } from 'graphql-tag';
 import { createSchema, createYoga } from 'graphql-yoga';
+import { DateTimeResolver} from 'graphql-scalars'
 
 import { firestore } from '../../server/firebase-admin-config';
 import { verifyToken } from '../../server/verifyToken';
 import { DecodedIdToken } from 'firebase-admin/auth';
 import { profile } from 'console';
 
+import DateTime from 'react-datetime';
+
+
+
 type MyContext = { user?: DecodedIdToken };
 
 const typeDefs = gql`
+
   type Query {
     users: [User!]!
     githubUsers: [GithubUser!]!
@@ -21,6 +27,7 @@ const typeDefs = gql`
     myProfile:[Profile!]!
     place: [Place!]!
   }
+  scalar DateTime
   type User {
     name: String
   }
@@ -48,8 +55,8 @@ const typeDefs = gql`
   type Reservation {
   id: String
   name: String
-  timeFrom: Int
-  timeTo: Int
+  timeFrom: String
+  timeTo: String
   place: String
   charge: Int
   paid: Boolean
@@ -59,8 +66,8 @@ const typeDefs = gql`
   type MyReservation {
   id: String
   name: String
-  timeFrom: Int
-  timeTo: Int
+  timeFrom: String
+  timeTo: String
   place: String
   charge: Int
   paid: Boolean
@@ -75,8 +82,8 @@ const typeDefs = gql`
   type Mutation {
   createReservation(
     name: String
-    timeFrom: Int
-    timeTo: Int
+    timeFrom: String
+    timeTo: String
     place: String
     charge: Int
     paid: Boolean
@@ -86,8 +93,8 @@ const typeDefs = gql`
   updateReservation(
     id: String
     name: String
-    timeFrom: Int
-    timeTo: Int
+    timeFrom: String
+    timeTo: String
     place: String
     charge: Int
     paid: Boolean
@@ -129,6 +136,7 @@ const typeDefs = gql`
 `;
 const db = firestore();
 const resolvers = {
+        // DateTime: DateTimeResolver,
     Query: {
         users: async () => {
             const usersRef = db.collection(
@@ -163,7 +171,7 @@ const resolvers = {
         },
         myProfile: async (parent: unknown, args: unknown, context: MyContext) => {
             const user = context.user;
-            console.log(`User: ${JSON.stringify(user)}`);
+            // console.log(`User: ${JSON.stringify(user)}`);
             const result = await db.collection('Profile').where('uid', '==', user?.uid).get();
 
             const data = [];
@@ -206,7 +214,6 @@ const resolvers = {
         },
         myReservation: async (parent: unknown, args: unknown, context: MyContext) => {
             const user = context.user;
-            console.log(`User: ${JSON.stringify(user)}`);
             const result = await db.collection('Reservation').where('profile', '==', user?.uid).get();
             const data = [];
 
@@ -259,7 +266,8 @@ const resolvers = {
         }
     },
     Mutation: {
-        createReservation: (parent: unknown, args: { name: string, timeFrom: number, timeTo: number, place: string, charge: number, paid: boolean, confirmed: boolean, profile: string }) => {
+        createReservation: (parent: unknown, args: { name: string, timeFrom: string, timeTo: string, place: string, charge: number, paid: boolean, confirmed: boolean, profile: string }) => {
+            console.log(args)
             const reservation = {
                 name: args.name,
                 timeFrom: args.timeFrom,

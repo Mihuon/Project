@@ -1,24 +1,34 @@
 import React, { FormEvent, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useCreatePlaceMutation } from '../../../generated/graphql';
+import { useCreateProfileMutation } from '../../../generated/graphql';
 import { authUtils } from '../../firebase/authUtils';
+import { useAuthContext } from '@/components/auth-context-provider';
 
 export default function Page() {
+  
+  const { user } = useAuthContext();
+  
+  const [uid, setUid] = useState('');
   const [name, setName] = useState('');
-  const [cost, setCost] = useState('');
+  const [surname, setSurname] = useState('');
+  const [credit, setCredit] = useState('');
+  const [admin, setAdmin] = useState(false);
 
   const router = useRouter();
-  const [createPlace] = useCreatePlaceMutation();
+  const [createProfile] = useCreateProfileMutation();
 
   const handleForm = async (event: FormEvent) => {
     event.preventDefault();
 
-    const createPlaceHandler = async () => {
+    const createProfileHandler = async () => {
       try {
-        const result = await createPlace({
+        const result = await createProfile({
           variables: {
+            uid:user?.uid,
             name: name,
-            cost: parseFloat(cost),
+            surname: surname,
+            credit:0,
+            admin: false,
           },
         });
 
@@ -26,17 +36,17 @@ export default function Page() {
         console.error(error);
       }
     };
-    await createPlaceHandler();
+    await createProfileHandler();
     router.push('/');
   };
 
   return (
     <div>
       <div className="form-wrapper">
-        <h1>Vytvořit místo</h1>
+        <h1>Vytvořit profil</h1>
         <form onSubmit={handleForm} className="form">
           <label>
-            <p>Název</p>
+            <p>Jméno</p>
             <input
               onChange={(e) => setName(e.target.value)}
               required
@@ -44,11 +54,11 @@ export default function Page() {
             />
           </label>
           <label>
-            <p>Cena</p>
+            <p>Příjmení</p>
             <input
-              onChange={(e) => setCost(e.target.value)}
+              onChange={(e) => setSurname(e.target.value)}
               required
-              type="number"
+              type="text"
             />
           </label>
           <button type="submit">Vytvořit</button>

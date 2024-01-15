@@ -1,12 +1,11 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useReservationQuery, useUpdateReservationMutation, usePlaceQuery } from '../../../../generated/graphql';
-
+import Select from 'react-select';
 export default function UpdateReservation() {
   const router = useRouter();
   const { query } = router;
   const id = query.id;
-
   const { data } = useReservationQuery();
 console.log(data);
 
@@ -42,8 +41,8 @@ console.log(data);
     const updatedReservationData = {
       id: id,
       name,
-      timeFrom: parseInt(timeFrom),
-      timeTo: parseInt(timeTo),
+      timeFrom: timeFrom.toString(),
+      timeTo: timeTo.toString(),
       place,
       charge: parseFloat(charge),
       paid,
@@ -76,7 +75,7 @@ console.log(data);
             <input
               onChange={(e) => setTimeFrom(e.target.value)}
               required
-              type="number"
+              type="datetime-local"
               value={timeFrom}
             />
           </label>
@@ -85,22 +84,30 @@ console.log(data);
             <input
               onChange={(e) => setTimeTo(e.target.value)}
               required
-              type="number"
+              type="datetime-local"
               value={timeTo}
             />
           </label>
-          {/* <label>
-            <p>Place</p>
-            <input
-              onChange={(e) => setPlace(e.target.value)}
-              required
-              type="text"
-              value={place}
-            />
-          </label> */}
           <label>
+            {/* <p>Místo</p>
+            <Select
+              onChange={(SelectedOption: any) => setPlace(String(SelectedOption.value))}
+              options={usePlaceQuery().data?.place.map((place) => (
+                { value: place.id, label: place.name }
+              ))}
+              value={options?.find((option)=>option.value === place)}
+              required
+            /> */}
             <p>Místo</p>
-            <select
+            <Select
+              onChange={(SelectedOption: any) => setPlace(String(SelectedOption.value))}
+              options={usePlaceQuery().data?.place.map((place) => (
+                { value: place.id, label: place.name }
+              ))}
+              value={usePlaceQuery().data?.place.find((option)=>option.value === place)}
+              required
+            />
+            {/* <select
               onChange={(e) => setPlace(e.target.value)}
               required
               value={place}
@@ -108,7 +115,7 @@ console.log(data);
               {usePlaceQuery().data?.place.map((place) => (
               <option key={place.id} value={place.id?.toString()}>{place.name}</option>
               ))}
-            </select>
+            </select> */}
           </label>
 
           <label>
@@ -122,25 +129,21 @@ console.log(data);
           </label>
           <label>
             <p>Paid</p>
-            <select
-              onChange={(e) => setPaid(e.target.value === 'true')}
+            <Select
+              onChange={(SelectedOption: any) => setPaid(SelectedOption.value)}
+              options={[{ value: true, label: "Yes"},{ value: false, label: "No"}]}
               required
-              value={paid ? 'true' : 'false'}
-            >
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
+              // value={paid}
+            />
           </label>
           <label>
             <p>Confirmed</p>
-            <select
-              onChange={(e) => setConfirmed(e.target.value === 'true')}
+            <Select
+              onChange={(SelectedOption: any) => setConfirmed(SelectedOption.value)}
+              options={[{ value: true, label: "Yes"},{ value: false, label: "No"}]}
               required
-              value={confirmed ? 'true' : 'false'}
-            >
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
+              // value={confirmed}
+            />
           </label>
           <button type="submit">Update Reservation</button>
         </form>

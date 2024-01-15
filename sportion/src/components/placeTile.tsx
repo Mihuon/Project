@@ -54,11 +54,11 @@ const PlaceTable: FC<Props> = () => {
 export const PlaceTile: FC<Props> = () => {
   return (
     <Paper sx={{ maxWidth: 500 }}>
-      <Link href="/place/create">
+      {/* <Link href="/place/create">
         <MenuItem>Přidat</MenuItem>
-      </Link>
-      <Typography align="center" variant="h4">
-        Place
+      </Link> */}
+      <Typography className="tileHead" align="center" variant="h4">
+        Místa
       </Typography>
       <PlaceTable />
     </Paper>

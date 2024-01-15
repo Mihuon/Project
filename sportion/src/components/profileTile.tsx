@@ -6,7 +6,7 @@ import { red } from "@mui/material/colors";
 type Props = {
   profile: Profile;
 };
-export const ProfileTail: FC<Props> = (props) => {
+export const ProfileTile: FC<Props> = (props) => {
   const {
     profile: { uid, name, surname, credit, admin },
   } = props;

@@ -1,0 +1,21 @@
+.appBar {
+  position: static;
+  background-color: rgb(220, 20, 50);
+}
+
+body {
+  padding: 0px;
+  background-color: rgb(250, 250, 200);
+}
+
+.indexGrid {
+  padding: 2rem;
+  justify-content: space-between;
+}
+
+.tileHead {
+  padding: 15px;
+}
+
+/* //refetch queries 
+//box a typography */

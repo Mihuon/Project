@@ -13,6 +13,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  DateTime: any;
 };
 
 export type GithubUser = {
@@ -58,8 +59,8 @@ export type MutationCreateReservationArgs = {
   paid?: InputMaybe<Scalars['Boolean']>;
   place?: InputMaybe<Scalars['String']>;
   profile?: InputMaybe<Scalars['String']>;
-  timeFrom?: InputMaybe<Scalars['Int']>;
-  timeTo?: InputMaybe<Scalars['Int']>;
+  timeFrom?: InputMaybe<Scalars['String']>;
+  timeTo?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -103,8 +104,8 @@ export type MutationUpdateReservationArgs = {
   name?: InputMaybe<Scalars['String']>;
   paid?: InputMaybe<Scalars['Boolean']>;
   place?: InputMaybe<Scalars['String']>;
-  timeFrom?: InputMaybe<Scalars['Int']>;
-  timeTo?: InputMaybe<Scalars['Int']>;
+  timeFrom?: InputMaybe<Scalars['String']>;
+  timeTo?: InputMaybe<Scalars['String']>;
 };
 
 export type MyProfile = {
@@ -126,8 +127,8 @@ export type MyReservation = {
   paid?: Maybe<Scalars['Boolean']>;
   place?: Maybe<Scalars['String']>;
   profile?: Maybe<Scalars['String']>;
-  timeFrom?: Maybe<Scalars['Int']>;
-  timeTo?: Maybe<Scalars['Int']>;
+  timeFrom?: Maybe<Scalars['String']>;
+  timeTo?: Maybe<Scalars['String']>;
 };
 
 export type Place = {
@@ -167,8 +168,8 @@ export type Reservation = {
   paid?: Maybe<Scalars['Boolean']>;
   place?: Maybe<Scalars['String']>;
   profile?: Maybe<Scalars['String']>;
-  timeFrom?: Maybe<Scalars['Int']>;
-  timeTo?: Maybe<Scalars['Int']>;
+  timeFrom?: Maybe<Scalars['String']>;
+  timeTo?: Maybe<Scalars['String']>;
 };
 
 export type User = {
@@ -249,17 +250,17 @@ export type UpdateCreditProfileMutation = { __typename?: 'Mutation', updateCredi
 export type ReservationQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ReservationQuery = { __typename?: 'Query', reservation: Array<{ __typename?: 'Reservation', id?: string | null, name?: string | null, timeFrom?: number | null, timeTo?: number | null, place?: string | null, charge?: number | null, paid?: boolean | null, confirmed?: boolean | null, profile?: string | null }> };
+export type ReservationQuery = { __typename?: 'Query', reservation: Array<{ __typename?: 'Reservation', id?: string | null, name?: string | null, timeFrom?: string | null, timeTo?: string | null, place?: string | null, charge?: number | null, paid?: boolean | null, confirmed?: boolean | null, profile?: string | null }> };
 
 export type MyReservationQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyReservationQuery = { __typename?: 'Query', myReservation: Array<{ __typename?: 'Reservation', id?: string | null, name?: string | null, timeFrom?: number | null, timeTo?: number | null, place?: string | null, charge?: number | null, paid?: boolean | null, confirmed?: boolean | null, profile?: string | null }> };
+export type MyReservationQuery = { __typename?: 'Query', myReservation: Array<{ __typename?: 'Reservation', id?: string | null, name?: string | null, timeFrom?: string | null, timeTo?: string | null, place?: string | null, charge?: number | null, paid?: boolean | null, confirmed?: boolean | null, profile?: string | null }> };
 
 export type CreateReservationMutationVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
-  timeFrom?: InputMaybe<Scalars['Int']>;
-  timeTo?: InputMaybe<Scalars['Int']>;
+  timeFrom?: InputMaybe<Scalars['String']>;
+  timeTo?: InputMaybe<Scalars['String']>;
   place?: InputMaybe<Scalars['String']>;
   charge?: InputMaybe<Scalars['Int']>;
   paid?: InputMaybe<Scalars['Boolean']>;
@@ -268,13 +269,13 @@ export type CreateReservationMutationVariables = Exact<{
 }>;
 
 
-export type CreateReservationMutation = { __typename?: 'Mutation', createReservation?: { __typename?: 'Reservation', id?: string | null, name?: string | null, timeFrom?: number | null, timeTo?: number | null, place?: string | null, charge?: number | null, paid?: boolean | null, confirmed?: boolean | null, profile?: string | null } | null };
+export type CreateReservationMutation = { __typename?: 'Mutation', createReservation?: { __typename?: 'Reservation', id?: string | null, name?: string | null, timeFrom?: string | null, timeTo?: string | null, place?: string | null, charge?: number | null, paid?: boolean | null, confirmed?: boolean | null, profile?: string | null } | null };
 
 export type UpdateReservationMutationVariables = Exact<{
   id: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
-  timeFrom?: InputMaybe<Scalars['Int']>;
-  timeTo?: InputMaybe<Scalars['Int']>;
+  timeFrom?: InputMaybe<Scalars['String']>;
+  timeTo?: InputMaybe<Scalars['String']>;
   place?: InputMaybe<Scalars['String']>;
   charge?: InputMaybe<Scalars['Int']>;
   paid?: InputMaybe<Scalars['Boolean']>;
@@ -282,7 +283,7 @@ export type UpdateReservationMutationVariables = Exact<{
 }>;
 
 
-export type UpdateReservationMutation = { __typename?: 'Mutation', updateReservation?: { __typename?: 'Reservation', id?: string | null, name?: string | null, timeFrom?: number | null, timeTo?: number | null, place?: string | null, charge?: number | null, paid?: boolean | null } | null };
+export type UpdateReservationMutation = { __typename?: 'Mutation', updateReservation?: { __typename?: 'Reservation', id?: string | null, name?: string | null, timeFrom?: string | null, timeTo?: string | null, place?: string | null, charge?: number | null, paid?: boolean | null } | null };
 
 export type DeleteReservationMutationVariables = Exact<{
   id?: InputMaybe<Scalars['String']>;
@@ -730,7 +731,7 @@ export type MyReservationQueryHookResult = ReturnType<typeof useMyReservationQue
 export type MyReservationLazyQueryHookResult = ReturnType<typeof useMyReservationLazyQuery>;
 export type MyReservationQueryResult = Apollo.QueryResult<MyReservationQuery, MyReservationQueryVariables>;
 export const CreateReservationDocument = gql`
-    mutation CreateReservation($name: String, $timeFrom: Int, $timeTo: Int, $place: String, $charge: Int, $paid: Boolean, $confirmed: Boolean, $profile: String) {
+    mutation CreateReservation($name: String, $timeFrom: String, $timeTo: String, $place: String, $charge: Int, $paid: Boolean, $confirmed: Boolean, $profile: String) {
   createReservation(
     name: $name
     timeFrom: $timeFrom
@@ -787,7 +788,7 @@ export type CreateReservationMutationHookResult = ReturnType<typeof useCreateRes
 export type CreateReservationMutationResult = Apollo.MutationResult<CreateReservationMutation>;
 export type CreateReservationMutationOptions = Apollo.BaseMutationOptions<CreateReservationMutation, CreateReservationMutationVariables>;
 export const UpdateReservationDocument = gql`
-    mutation UpdateReservation($id: String!, $name: String, $timeFrom: Int, $timeTo: Int, $place: String, $charge: Int, $paid: Boolean, $confirmed: Boolean) {
+    mutation UpdateReservation($id: String!, $name: String, $timeFrom: String, $timeTo: String, $place: String, $charge: Int, $paid: Boolean, $confirmed: Boolean) {
   updateReservation(
     id: $id
     name: $name

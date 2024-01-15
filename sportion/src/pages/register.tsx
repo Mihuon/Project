@@ -41,8 +41,7 @@ function Page() {
     //     console.error(error);
     //   }
     // };
-
-    return router.push('/');
+    return router.push('/profile/create');
   };
   return (
     <div className="wrapper">

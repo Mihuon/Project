@@ -43,10 +43,10 @@ export default function UpdatePlace() {
   return (
     <div>
       <div className="form-wrapper">
-        <h1>Update Place</h1>
+        <h1>Upravit místo</h1>
         <form onSubmit={handleForm} className="form">
           <label>
-            <p>Name</p>
+            <p>Název</p>
             <input
               onChange={(e) => setName(e.target.value)}
               required
@@ -55,7 +55,7 @@ export default function UpdatePlace() {
             />
           </label>
           <label>
-            <p>Cost</p>
+            <p>Cena</p>
             <input
               onChange={(e) => setCost(e.target.value)}
               required
@@ -63,7 +63,7 @@ export default function UpdatePlace() {
               value={cost}
             />
           </label>
-          <button type="submit">Update Place</button>
+          <button type="submit">Upravit</button>
         </form>
       </div>
     </div>

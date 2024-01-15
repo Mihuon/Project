@@ -8,8 +8,9 @@ export default function UpdateReservation() {
   const id = query.id;
 
   const { data } = useReservationQuery();
-console.log(data);
+  console.log(data);
 
+  const { data: placeData } = usePlaceQuery();
   const [name, setName] = useState('');
   const [timeFrom, setTimeFrom] = useState('');
   const [timeTo, setTimeTo] = useState('');
@@ -42,8 +43,8 @@ console.log(data);
     const updatedReservationData = {
       id: id,
       name,
-      timeFrom: parseInt(timeFrom),
-      timeTo: parseInt(timeTo),
+      timeFrom,
+      timeTo,
       place,
       charge: parseFloat(charge),
       paid,
@@ -59,18 +60,24 @@ console.log(data);
 
   return (
     <div>
-    <div className="form-wrapper">
-      <h1>Confirm Reservation</h1>
-      <p>Name: {name}</p>
-      <p>Time From: {timeFrom}</p>
-      <p>Time To: {timeTo}</p>
-      <p>Place: {place}</p>
-      <p>Charge: {charge}</p>
 
-      <button onClick={handleConfirmation} type="button">
-        Confirm Reservation
-      </button>
-    </div>
+      <div className="form-wrapper">
+        <h1>Potvrdit rezervaci</h1>
+        <p>Název: {name}</p>
+        {/* <p>Čas: {`${new Date(timeFrom).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${new Date(timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</p> */}
+        <p>
+          Čas: {`${new Date(timeFrom).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          })} ${new Date(timeFrom).toLocaleDateString()} - ${new Date(timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })} ${new Date(timeTo).toLocaleDateString()} `}
+        </p>
+        <p>Místo: {placeData?.place.find((plc) => plc.id === place)?.name}</p>
+        <p>Cena: {charge} Kč</p>
+
+        <button onClick={handleConfirmation} type="button">
+          Potvrdit
+        </button>
+      </div>
     </div>
   );
 }

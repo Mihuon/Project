@@ -41,8 +41,8 @@ const ProfilesTable: FC<Props> = () => {
 export const ProfilesTile: FC<Props> = () => {
   return (
     <Paper sx={{ maxWidth: 500 }}>
-      <Typography align="center" variant="h4">
-        Profiles
+      <Typography className="tileHead" align="center" variant="h4">
+        Profily
       </Typography>
       <ProfilesTable />
     </Paper>
