@@ -1,6 +1,7 @@
 .appBar {
   position: static;
   background-color: rgb(220, 20, 50);
+  width: 100%;
 }
 
 body {
@@ -9,7 +10,7 @@ body {
 }
 
 .indexGrid {
-  padding: 2rem;
+  padding: 5%;
   justify-content: space-between;
 }
 
@@ -19,3 +20,38 @@ body {
 
 /* //refetch queries 
 //box a typography */
+menuitem {
+  text-align: center;
+}
+
+.item1 {
+  width: 65%;
+}
+
+.item2 {
+  width: 30%;
+}
+
+.item3 {
+  width: 30%;
+  padding-top: 5%;
+}
+
+.item4 {
+  padding-top: 5%;
+  width: 30%;
+}
+
+.item5 {
+  padding-top: 5%;
+  width: 30%;
+}
+
+.tools {
+  display: flex;
+  padding: 0 5% 5% 5%;
+  /* padding: 100px 50px 50px 50px; */
+  /* padding-left: 5%;
+  padding-right: 5%; */
+  justify-content: space-between;
+}

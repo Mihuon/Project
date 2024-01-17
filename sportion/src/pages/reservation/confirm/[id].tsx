@@ -59,9 +59,10 @@ export default function UpdateReservation() {
   };
 
   return (
-    <div>
+    <div className='wrapper'>
 
       <div className="form-wrapper">
+    <div className='form'>
         <h1>Potvrdit rezervaci</h1>
         <p>Název: {name}</p>
         {/* <p>Čas: {`${new Date(timeFrom).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${new Date(timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</p> */}
@@ -77,6 +78,7 @@ export default function UpdateReservation() {
         <button onClick={handleConfirmation} type="button">
           Potvrdit
         </button>
+      </div>
       </div>
     </div>
   );

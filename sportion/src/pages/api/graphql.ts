@@ -248,7 +248,8 @@ const resolvers = {
                     cost: docData.cost
                 });
             });
-            // console.log(data);
+            
+            console.log("BREKEKEE",data);
             return data;
         },
         githubUsers: async () => {

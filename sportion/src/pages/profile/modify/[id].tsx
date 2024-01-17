@@ -50,8 +50,9 @@ export default function UpdateProfile() {
   };
 
   return (
-    <div>
+    <div className='wrapper'>
       <div className="form-wrapper">
+    <div className='form'>
         <h1>Upravit profil</h1>
         <form onSubmit={handleForm} className="form">
           {/* <label>
@@ -103,6 +104,7 @@ export default function UpdateProfile() {
           </label> */}
           <button type="submit">Upravit</button>
         </form>
+      </div>
       </div>
     </div>
   );

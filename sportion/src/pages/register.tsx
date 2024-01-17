@@ -46,7 +46,7 @@ function Page() {
   return (
     <div className="wrapper">
       <div className="form-wrapper">
-        <h1>Register</h1>
+        <h1>Registrace</h1>
         <form onSubmit={handleForm} className="form">
           <label htmlFor="email">
             <p>Email</p>
@@ -56,21 +56,21 @@ function Page() {
               type="email"
               name="email"
               id="email"
-              placeholder="email"
+              placeholder="Email"
             />
           </label>
           <label htmlFor="password">
-            <p>Password</p>
+            <p>Heslo</p>
             <input
               onChange={(e) => setPassword(e.target.value)}
               required
               type="password"
               name="password"
               id="password"
-              placeholder="password"
+              placeholder="Heslo"
             />
           </label>
-          <button type="submit">Register</button>
+          <button type="submit">Registrovat se</button>
         </form>
       </div>
     </div>

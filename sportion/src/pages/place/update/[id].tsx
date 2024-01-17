@@ -41,9 +41,10 @@ export default function UpdatePlace() {
   };
 
   return (
-    <div>
+    <div className="wrapper">
       <div className="form-wrapper">
-        <h1>Upravit místo</h1>
+      <div className="form">
+        <h1>Upravit sportoviště</h1>
         <form onSubmit={handleForm} className="form">
           <label>
             <p>Název</p>
@@ -65,6 +66,7 @@ export default function UpdatePlace() {
           </label>
           <button type="submit">Upravit</button>
         </form>
+      </div>
       </div>
     </div>
   );

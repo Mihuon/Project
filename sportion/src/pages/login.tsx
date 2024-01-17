@@ -17,7 +17,7 @@ function Page() {
   return (
     <div className="wrapper">
       <div className="form-wrapper">
-        <h1>Přihlásit se</h1>
+        <h1>Přihlášení</h1>
         <form onSubmit={handleForm} className="form">
           <label htmlFor="email">
             <p>Email</p>
@@ -27,7 +27,7 @@ function Page() {
               type="email"
               name="email"
               id="email"
-              placeholder="example@mail.com"
+              placeholder="priklad@mail.com"
             />
           </label>
           <label htmlFor="password">
@@ -38,12 +38,12 @@ function Page() {
               type="password"
               name="password"
               id="password"
-              placeholder="password"
+              placeholder="Heslo"
             />
           </label>
-          <button type="submit">Login</button>
+          <button type="submit">Přihlásit se</button>
         </form>
-        <a className='register' href="../register">Create profile</a>
+        <a className='register' href="../register">Registrovat se</a>
       </div>
     </div>
   );

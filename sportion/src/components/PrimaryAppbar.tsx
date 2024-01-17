@@ -1,16 +1,12 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -20,9 +16,8 @@ import { useAuthContext } from './auth-context-provider';
 import { authUtils } from '@/firebase/authUtils';
 import Link from 'next/link';
 import {useMyProfileQuery } from '../../generated/graphql';
-import { ProfileTile } from './profileTile';
 import { Avatar, CardHeader } from '@mui/material';
-import { blue, red } from '@mui/material/colors';
+import { blue } from '@mui/material/colors';
 type Props = {};
 
 export const PrimaryAppbar: FC<Props> = () => {
@@ -71,14 +66,11 @@ export const PrimaryAppbar: FC<Props> = () => {
       onClose={handleMenuClose}
     >
       
-      {user?.email != null ? (
+      {user?.email != null || user?.email != undefined ? (
         <div>
-          <Link href={`/profile/modify/${profileData?.id}`}>
-                    <MenuItem>Upravit</MenuItem>
-                  </Link>
         <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: blue[500] }}>
+          <Avatar sx={{ bgcolor: 'rgb(220, 20, 50)' }}>
             {`${profileData?.name?.charAt(0)}${profileData?.surname?.charAt(0)}`}
           </Avatar>
         }
@@ -89,7 +81,10 @@ export const PrimaryAppbar: FC<Props> = () => {
         // }
         title={`${profileData?.name} ${profileData?.surname}`}
         subheader={`${profileData?.credit} Kč`}
-      /></div>
+      />
+          <Link href={`/profile/modify/${profileData?.id}`}>
+                    <MenuItem>Upravit</MenuItem>
+                  </Link></div>
       )
       :null}
       {user?.email == null ? (<Link key="login" href="./login"><MenuItem onClick={handleMenuClose}>Přihlásit se</MenuItem></Link>) 
@@ -114,25 +109,6 @@ export const PrimaryAppbar: FC<Props> = () => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton size="large" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
@@ -142,7 +118,7 @@ export const PrimaryAppbar: FC<Props> = () => {
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>Profil</p>
       </MenuItem>
     </Menu>
   );

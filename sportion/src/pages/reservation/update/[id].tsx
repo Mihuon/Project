@@ -17,6 +17,10 @@ console.log(data);
   const [paid, setPaid] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
 
+  const places = usePlaceQuery().data?.place.map((place) => (
+    { value: place.id, label: place.name }
+  ))
+
   useEffect(() => {
     if (id && data && data.reservation) {
       const currentReservation = data.reservation.find(reservation => reservation.id === id);
@@ -57,12 +61,12 @@ console.log(data);
   };
 
   return (
-    <div>
+    <div className="wrapper">
       <div className="form-wrapper">
-        <h1>Update Reservation</h1>
+        <h1>Upravit rezervaci</h1>
         <form onSubmit={handleForm} className="form">
           <label>
-            <p>Name</p>
+            <p>Název</p>
             <input
               onChange={(e) => setName(e.target.value)}
               required
@@ -71,7 +75,7 @@ console.log(data);
             />
           </label>
           <label>
-            <p>Time From</p>
+            <p>Začátek</p>
             <input
               onChange={(e) => setTimeFrom(e.target.value)}
               required
@@ -80,7 +84,7 @@ console.log(data);
             />
           </label>
           <label>
-            <p>Time To</p>
+            <p>Konec</p>
             <input
               onChange={(e) => setTimeTo(e.target.value)}
               required
@@ -98,13 +102,12 @@ console.log(data);
               value={options?.find((option)=>option.value === place)}
               required
             /> */}
-            <p>Místo</p>
+            <p>Sportoviště</p>
             <Select
               onChange={(SelectedOption: any) => setPlace(String(SelectedOption.value))}
-              options={usePlaceQuery().data?.place.map((place) => (
-                { value: place.id, label: place.name }
-              ))}
-              value={usePlaceQuery().data?.place.find((option)=>option.value === place)}
+              options={places}
+              // value={usePlaceQuery().data?.place.find((option)=>option.value === place)}
+              value={places?.find((e) => e.value === place)}
               required
             />
             {/* <select
@@ -119,7 +122,7 @@ console.log(data);
           </label>
 
           <label>
-            <p>Charge</p>
+            <p>Cena</p>
             <input
               onChange={(e) => setCharge(e.target.value)}
               required
@@ -128,24 +131,24 @@ console.log(data);
             />
           </label>
           <label>
-            <p>Paid</p>
+            <p>Zaplaceno</p>
             <Select
               onChange={(SelectedOption: any) => setPaid(SelectedOption.value)}
-              options={[{ value: true, label: "Yes"},{ value: false, label: "No"}]}
+              options={[{ value: true, label: "Ano"},{ value: false, label: "Ne"}]}
               required
-              // value={paid}
+              value={[{ value: true, label: "Ano"},{ value: false, label: "Ne"}].find((p) => p.value === paid)}
             />
           </label>
           <label>
-            <p>Confirmed</p>
+            <p>Potvrzeno</p>
             <Select
               onChange={(SelectedOption: any) => setConfirmed(SelectedOption.value)}
-              options={[{ value: true, label: "Yes"},{ value: false, label: "No"}]}
+              options={[{ value: true, label: "Ano"},{ value: false, label: "Ne"}]}
               required
-              // value={confirmed}
+              value={[{ value: true, label: "Ano"},{ value: false, label: "Ne"}].find((c) => c.value === confirmed)}
             />
           </label>
-          <button type="submit">Update Reservation</button>
+          <button type="submit">Upravit</button>
         </form>
       </div>
     </div>

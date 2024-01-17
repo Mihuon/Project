@@ -13,18 +13,25 @@ import { useAuthContext } from './auth-context-provider';
 import { profile } from 'console';
 
 const ReservationsTable = () => {
+  useMyProfileQuery().refetch();
+  useReservationQuery().refetch();
+  useMyReservationQuery().refetch();
+
   const { data: placeData } = usePlaceQuery();
   const { user } = useAuthContext();
 
+
   const { data: myProfileData } = useMyProfileQuery({ skip: !user })
+  // const myProfileData = neco;
   const profileData = myProfileData?.myProfile.find((profile) => profile.uid === user?.uid);
+
 
   let reservationData;
 
   const { data: adminProfilesData } = useProfileQuery({ skip: !user });
 
   if (profileData?.admin === true) {
-    const { data: adminReservationData } = useReservationQuery();
+    const { data: adminReservationData } = useReservationQuery({ skip: !user });
     reservationData = adminReservationData?.reservation;
     // const { data: adminProfilesData } = useProfileQuery();
     // profilesData = adminProfilesData?.profile;
@@ -39,6 +46,12 @@ const ReservationsTable = () => {
     window.location.reload();
   };
 
+
+
+
+  const reservationData2 = reservationData ? [...reservationData].sort((a, b) => (new Date(a.timeFrom)).valueOf() - (new Date(b.timeFrom)).valueOf())
+    : null;
+
   return (
     <TableContainer component={Paper}>
       <Table size="small">
@@ -46,17 +59,16 @@ const ReservationsTable = () => {
           <TableRow>
             <TableCell align="center">Název</TableCell>
             {profileData?.admin === true ? <TableCell align="center">Profil</TableCell> : null}
-            <TableCell align="center">Místo</TableCell>
-            <TableCell align="center">Čas</TableCell>
+            <TableCell align="center">Sportoviště</TableCell>
+            <TableCell align="center">Cena</TableCell>
             <TableCell align="center">Datum</TableCell>
-            <TableCell align="center">Zaplaceno</TableCell>
-            <TableCell align="center">Potrvzeno</TableCell>
+            <TableCell align="center">Stav</TableCell>
             <TableCell align="center">Akce</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
 
-          {reservationData?.map((reservation) => {
+          {reservationData2?.map((reservation) => {
             const place = placeData?.place.find((place) => place.id === reservation.place);
 
             return (
@@ -71,27 +83,32 @@ const ReservationsTable = () => {
                 {/* <TableCell>prof</TableCell> */}
 
                 <TableCell align="center">{place?.name}</TableCell>
+                <TableCell align="center">{reservation?.charge} Kč</TableCell>
 
                 {/* <TableCell align="center">{reservation.timeFrom} - {reservation.timeTo}</TableCell> */}
                 <TableCell align="center">
                   {`${new Date(reservation.timeFrom).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${new Date(reservation.timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
+                  <br/> {new Date(reservation.timeFrom).toLocaleDateString([],{ day: 'numeric', month: 'short' })}
                 </TableCell>
+
                 <TableCell align="center">
-                  {new Date(reservation.timeFrom).toLocaleDateString()}
+                  {(reservation.paid == true && reservation.confirmed == true) ? 'Zaplaceno' : null}
+                  {(reservation.paid == false && reservation.confirmed == true) ? 'Potvrzeno' : null}
+                  {(reservation.paid == false && reservation.confirmed == false) ? 'Nepotvrzeno' : null}
                 </TableCell>
-                <TableCell align="center">{reservation.paid ? 'Ano' : 'Ne'}</TableCell>
-                <TableCell align="center">{reservation.confirmed ? 'Ano' : 'Nepotvrzeno'}</TableCell>
+                {/* <TableCell align="center">{reservation.paid ? 'Ano' : 'Ne'}</TableCell> */}
+                {/* <TableCell align="center">{reservation.confirmed ? 'Ano' : 'Ne'}</TableCell> */}
                 <TableCell align="center">
-                  <Link href={`/reservation/localpay/${reservation.id}`}>
-                    {(reservation.paid != true && reservation.confirmed == true) ? <MenuItem>Doplatiti</MenuItem> : null}
-                  </Link>
-                  <Link href={`/reservation/pay/${reservation.id}`}>
-                    {(reservation.paid != true && reservation.confirmed == true) ? <MenuItem>Zaplatit</MenuItem> : null}
-                  </Link>
-                  {(profileData?.admin == true && reservation.confirmed != true) ? <Link href={`/reservation/confirm/${reservation.id}`}><MenuItem>Potvrdit</MenuItem></Link> : null}
-                  <Link href={`/reservation/update/${reservation.id}`}>
-                    {(profileData?.admin == true) ? <MenuItem>Upravit</MenuItem> : null}
-                  </Link>
+                  <Button><Link href={`/reservation/detail/${reservation.id}`}>Detail</Link></Button>
+                  {(reservation.paid != true && reservation.confirmed == true && profileData?.admin==true) ? <Button><Link href={`/reservation/localpay/${reservation.id}`}>Doplatit</Link></Button> : null}
+
+                  {(reservation.paid != true && reservation.confirmed == true && reservation.profile == profileData?.uid) ? <Button><Link href={`/reservation/pay/${reservation.id}`}>Zaplatit</Link></Button> : null}
+
+                  {(profileData?.admin == true && reservation.confirmed != true) ? <Button><Link href={`/reservation/confirm/${reservation.id}`}>Potvrdit</Link></Button> : null}
+
+                  {(profileData?.admin == true) ? <Button><Link href={`/reservation/update/${reservation.id}`}>Upravit</Link></Button> : null}
+
+
                   {(reservation.paid != true || profileData?.admin == true) ? <Button color="error" onClick={() => handleDelete(reservation.id)}>Smazat</Button> : null}
                 </TableCell>
               </TableRow>

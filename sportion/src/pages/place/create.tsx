@@ -31,9 +31,10 @@ export default function Page() {
   };
 
   return (
-    <div>
+    <div className='wrapper'>
       <div className="form-wrapper">
-        <h1>Vytvořit místo</h1>
+      <div className="form">
+        <h1>Vytvořit sportoviště</h1>
         <form onSubmit={handleForm} className="form">
           <label>
             <p>Název</p>
@@ -53,6 +54,7 @@ export default function Page() {
           </label>
           <button type="submit">Vytvořit</button>
         </form>
+      </div>
       </div>
     </div>
   );

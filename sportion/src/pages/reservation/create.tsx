@@ -16,6 +16,8 @@ export default function Page() {
   const [confirmed, setConfirmed] = useState(false);
   const [profile, setUser] = useState(user?.uid);
 
+  const placeData = usePlaceQuery();
+
   const router = useRouter();
   const [createReservation] = useCreateReservationMutation();
 
@@ -23,20 +25,24 @@ export default function Page() {
     event.preventDefault();
 
     const createReservationHandler = async () => {
+      
       try {
+  const placeCost = placeData.data?.place.find((plc) => plc.id === place)?.cost;
         
-  // const placeCost = usePlaceQuery().data.place.find((plc) => plc.id === place)?.cost;
-  // const hours = Math.abs(new Date(timeFrom) - new Date(timeTo)) / 3600000;
+  
+  const hours = Math.abs(Number(new Date(timeFrom)) - Number(new Date(timeTo))) / 3600000;
+  const tempo = placeCost*hours;
 
+console.log("tempo, placecost, hours",tempo, placeCost, hours);
         const result = await createReservation({
           variables: {
             name: name,
             timeFrom: timeFrom.toString(),
             timeTo: timeTo.toString(),
             place: place,
-            charge: parseInt(charge),
-            paid: paid,
-            confirmed: confirmed,
+            charge: tempo,
+            paid: false,
+            confirmed: false,
             profile: profile
           },
         });
@@ -50,12 +56,12 @@ export default function Page() {
   };
 
   return (
-    <div>
+    <div className="wrapper">
       <div className="form-wrapper">
-        <h1>Create Reservation</h1>
+        <h1>Vytvořit rezervaci</h1>
         <form onSubmit={handleForm} className="form">
           <label>
-            <p>Name</p>
+            <p>Název</p>
             <input
               onChange={(e) => setName(e.target.value)}
               required
@@ -63,7 +69,7 @@ export default function Page() {
             />
           </label>
           <label>
-            <p>Time From</p>
+            <p>Začátek</p>
             <input
               onChange={(e) => setTimeFrom(e.target.value)}
               required
@@ -71,7 +77,7 @@ export default function Page() {
             />
           </label>
           <label>
-            <p>Time To</p>
+            <p>Konec</p>
             <input
               onChange={(e) => setTimeTo(e.target.value)}
               required
@@ -79,7 +85,7 @@ export default function Page() {
             />
           </label>
           <label>
-            <p>Místo</p>
+            <p>Sportoviště</p>
             <Select
               onChange={(SelectedOption: any) => setPlace(String(SelectedOption.value))}
               options={usePlaceQuery().data?.place.map((place) => (
@@ -98,14 +104,14 @@ export default function Page() {
               ))}
             </select> */}
           </label>
-          <label>
+          {/* <label>
             <p>Charge</p>
             <input
               onChange={(e) => setCharge(e.target.value)}
               required
               type="number"
             />
-          </label>
+          </label> */}
           {/* <label>
             <p>Paid</p>
             <select
@@ -127,7 +133,7 @@ export default function Page() {
               <option value="false">No</option>
             </select>
           </label> */}
-          <label>
+          {/* <label>
             <p>Paid</p>
             <Select
               onChange={(SelectedOption: any) => setPaid(SelectedOption.value)}
@@ -142,8 +148,8 @@ export default function Page() {
               options={[{ value: true, label: "Yes"},{ value: false, label: "No"}]}
               required
             />
-          </label>
-          <button type="submit">Create Reservation</button>
+          </label> */}
+          <button type="submit">Vytvořit</button>
         </form>
       </div>
     </div>

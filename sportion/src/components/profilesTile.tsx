@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import { Link, MenuItem, Typography, Button } from '@mui/material';
-import { Place } from '../../types';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -20,7 +19,8 @@ const ProfilesTable: FC<Props> = () => {
           <TableRow>
             <TableCell align="center">Jméno</TableCell>
             <TableCell align="center">Kredit</TableCell>
-            <TableCell align="center">Admin</TableCell>
+            <TableCell align="center">Role</TableCell>
+            <TableCell align="center">Akce</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -30,7 +30,8 @@ const ProfilesTable: FC<Props> = () => {
                 {profile.name}
               </TableCell>
               <TableCell align="center">{`${profile?.name} ${profile?.surname}`}</TableCell>
-              <TableCell align="center">{(profile.admin ==true)? "Ano" : "Ne"}</TableCell>
+              <TableCell align="center">{(profile.admin ==true)? "Administrátor" : "Uživatel"}</TableCell>
+              <TableCell align="center"><Link href={`/profile/update/${profile.id}`}><MenuItem>Upravit</MenuItem></Link></TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -42,7 +43,7 @@ export const ProfilesTile: FC<Props> = () => {
   return (
     <Paper sx={{ maxWidth: 500 }}>
       <Typography className="tileHead" align="center" variant="h4">
-        Profily
+        Uživatelé
       </Typography>
       <ProfilesTable />
     </Paper>

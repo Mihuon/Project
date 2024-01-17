@@ -88,21 +88,23 @@ export default function UpdateReservation() {
   //box a typography
   const { data: placeData } = usePlaceQuery();
   return (
-    <div>
-      {myProfileData?.myProfile.find((profile) => profile.uid === user?.uid)?.credit}
+    <div className="wrapper">
       <div className="form-wrapper">
-        <h1>Zapltit rezervaci</h1>
-        <p>Název: {name}</p>
-        <p>Čas: {`${new Date(timeFrom).toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
-        })} ${new Date(timeFrom).toLocaleDateString()} - ${new Date(timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })} ${new Date(timeTo).toLocaleDateString()} `}
-        </p>
-        <p>Místo: {placeData?.place.find((plc) => plc.id === place)?.name}</p>
-        <p>Cena: {charge} Kč</p>
-        <button onClick={handlePayment} type="button">
-          Confirm Payment
-        </button>
+        <div className="form">
+          <h1>Zaplatit rezervaci</h1>
+          <p>Název: {name}</p>
+          <p>Čas: {`${new Date(timeFrom).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          })} ${new Date(timeFrom).toLocaleDateString()} - ${new Date(timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })} ${new Date(timeTo).toLocaleDateString()} `}
+          </p>
+          <p>Sportoviště: {placeData?.place.find((plc) => plc.id === place)?.name}</p>
+          <p>Cena: {charge} Kč</p>
+          <p>Kredit: {myProfileData?.myProfile.find((profile) => profile.uid === user?.uid)?.credit}</p>
+          <button onClick={handlePayment} type="button">
+            Zaplatit
+          </button>
+        </div>
       </div>
     </div>
   );

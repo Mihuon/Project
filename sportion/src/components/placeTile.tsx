@@ -9,16 +9,23 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { usePlaceQuery, useDeletePlaceMutation } from '../../generated/graphql';
+import { usePlaceQuery, useDeletePlaceMutation, useMyProfileQuery } from '../../generated/graphql';
+import { useAuthContext } from './auth-context-provider';
 
 type Props = {};
 const PlaceTable: FC<Props> = () => {
+  usePlaceQuery().refetch()
+  
   const { data } = usePlaceQuery();
   const [deletePlace] = useDeletePlaceMutation();
   const handleDelete = (placeId: string) => {
     deletePlace({ variables: { id: placeId } });
     window.location.reload();
   };
+  const { data: placeData } = usePlaceQuery();
+  const { user } = useAuthContext();
+  const { data: myProfileData } = useMyProfileQuery({ skip: !user })
+  const profileData = myProfileData?.myProfile.find((profile) => profile.uid === user?.uid);
   return (
     <TableContainer component={Paper}>
       <Table size="small">
@@ -30,19 +37,15 @@ const PlaceTable: FC<Props> = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.place.map((place) => (
+          {placeData?.place.map((place) => (
             <TableRow key={place.id}>
               <TableCell align="center" component="th" scope="row">
                 {place.name}
               </TableCell>
               <TableCell align="center">{place.cost}</TableCell>
               <TableCell align="center">
-                <Link href={`/place/update/${place.id}`}>
-                  <MenuItem>Upravit</MenuItem>
-                </Link>
-                <Button  color="error" onClick={() => handleDelete(place.id)}>
-                  Smazat
-                </Button>
+              <Button><Link href={`/place/detail/${place.id}`}>Detail</Link></Button>
+              {(profileData?.admin == true) ? (<><Button><Link href={`/place/update/${place.id}`}>Upravit</Link></Button><Button color="error" onClick={() => handleDelete(place.id)}>Smazat</Button></>):null}
               </TableCell>
             </TableRow>
           ))}
@@ -58,7 +61,7 @@ export const PlaceTile: FC<Props> = () => {
         <MenuItem>Přidat</MenuItem>
       </Link> */}
       <Typography className="tileHead" align="center" variant="h4">
-        Místa
+        Sportoviště
       </Typography>
       <PlaceTable />
     </Paper>

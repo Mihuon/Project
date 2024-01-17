@@ -1,6 +1,7 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useProfileQuery, useUpdateProfileMutation } from '../../../../generated/graphql';
+import Select from 'react-select';
 
 export default function UpdateProfile() {
   const router = useRouter();
@@ -50,21 +51,14 @@ export default function UpdateProfile() {
   };
 
   return (
-    <div>
+    <div className='wrapper'>
       <div className="form-wrapper">
-        <h1>Update Profile</h1>
+    <div className='form'>
+        <h1>Upravit profil</h1>
         <form onSubmit={handleForm} className="form">
+          
           <label>
-            <p>Uid</p>
-            <input
-              onChange={(e) => setUid(e.target.value)}
-              required
-              type="text"
-              value={uid}
-            />
-          </label>
-          <label>
-            <p>Name</p>
+            <p>Jméno</p>
             <input
               onChange={(e) => setName(e.target.value)}
               required
@@ -73,7 +67,7 @@ export default function UpdateProfile() {
             />
           </label>
           <label>
-            <p>Surname</p>
+            <p>Příjmení</p>
             <input
               onChange={(e) => setSurname(e.target.value)}
               required
@@ -82,7 +76,7 @@ export default function UpdateProfile() {
             />
           </label>
           <label>
-            <p>Credit</p>
+            <p>Kredit</p>
             <input
               onChange={(e) => setCredit(e.target.value)}
               required
@@ -90,20 +84,22 @@ export default function UpdateProfile() {
               value={credit}
             />
           </label>
+          
           <label>
-            <p>Admin</p>
-            <select
-              onChange={(e) => setAdmin(e.target.value === 'true')}
+          <p>Administrátor</p>
+            <Select
+              onChange={(SelectedOption: any) => setAdmin(SelectedOption.value)}
+              options={[{ value: true, label: "Ano"},{ value: false, label: "Ne"}]}
               required
-              value={admin ? 'true' : 'false'}
-            >
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
+              value={[{ value: true, label: "Ano"},{ value: false, label: "Ne"}].find((p) => p.value === admin)}
+            />
           </label>
-          <button type="submit">Update Place</button>
+          
+          
+          <button type="submit">Upravit profil</button>
         </form>
       </div>
+    </div>
     </div>
   );
 }

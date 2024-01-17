@@ -4,8 +4,9 @@ import {
   useReservationQuery,
   useUpdateReservationMutation,
   useUpdateCreditProfileMutation,
-  useMyProfileQuery,
-  usePlaceQuery
+  usePlaceQuery,
+  useMyProfileLazyQuery,
+  useMyProfileQuery
 } from '../../../../generated/graphql';
 import { useAuthContext } from '@/components/auth-context-provider';
 
@@ -26,8 +27,8 @@ export default function UpdateReservation() {
   const [confirmed, setConfirmed] = useState(false);
 
   const { user } = useAuthContext();
-  
-  const {data:myProfileData} = useMyProfileQuery()
+
+  const { data: myProfileData } = useMyProfileQuery()
 
   useEffect(() => {
     if (id && data && data.reservation) {
@@ -38,7 +39,7 @@ export default function UpdateReservation() {
         setTimeFrom(currentReservation.timeFrom.toString());
         setTimeTo(currentReservation.timeTo.toString());
         setPlace(currentReservation.place);
-        setCharge(currentReservation.charge.toString());
+        setCharge(currentReservation.charge);
         setPaid(!!currentReservation.paid);
         setConfirmed(!!currentReservation.confirmed);
       }
@@ -46,60 +47,49 @@ export default function UpdateReservation() {
   }, [id, data]);
 
   const [updateReservation] = useUpdateReservationMutation();
-  const [updateProfile] = useUpdateCreditProfileMutation();
 
-  const handlePayment = async (event: FormEvent) => {
-    event.preventDefault();
+  const handlePayment = async () => {
+    // event.preventDefault();
 
-    const userProfile = myProfileData?.myProfile.find((profile) => profile.uid === user?.uid);
+    const updatedReservationData = {
+      id: id,
+      name,
+      timeFrom,
+      timeTo,
+      place,
+      charge,
+      paid:true,
+      confirmed,
+    };
 
-    if (userProfile && paid != true && confirmed == true) {
+    const result = await updateReservation({
+      variables: updatedReservationData,
+    });
 
-      const result = await updateProfile({
-        variables: {
-          id: userProfile.id,
-        },
-      });
-
-      if (result.data?.updateCreditProfile) {
-        const updatedReservationData = {
-          id: id,
-          name,
-          timeFrom,
-          timeTo,
-          place,
-          charge: parseFloat(charge),
-          paid: true,
-          confirmed,
-        };
-
-        await updateReservation({
-          variables: updatedReservationData,
-        });
-
-        router.push('/');
-      }
-    }
+    router.push('/');
+      
+    
   };
 
+  //box a typography
   const { data: placeData } = usePlaceQuery();
   return (
-    <div>
-      {myProfileData?.myProfile.find((profile) => profile.uid === user?.uid)?.credit}
+    <div className="wrapper">
       <div className="form-wrapper">
-        <h1>Confirm Reservation</h1>
-        <p>Název: {name}</p>
-        <p>Čas: {`${new Date(timeFrom).toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
-        })} ${new Date(timeFrom).toLocaleDateString()} - ${new Date(timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })} ${new Date(timeTo).toLocaleDateString()} `}
-        </p>
-        <p>Místo: {placeData?.place.find((plc) => plc.id === place)?.name}</p>
-        <p>Cena: {charge} Kč</p>
-
-        <button onClick={handlePayment} type="button">
-        Zaplatit
-        </button>
+        <div className="form">
+          <h1>Doplatit rezervaci</h1>
+          <p>Název: {name}</p>
+          <p>Čas: {`${new Date(timeFrom).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          })} ${new Date(timeFrom).toLocaleDateString()} - ${new Date(timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })} ${new Date(timeTo).toLocaleDateString()} `}
+          </p>
+          <p>Sportoviště: {placeData?.place.find((plc) => plc.id === place)?.name}</p>
+          <p>Cena: {charge} Kč</p>
+          <button onClick={handlePayment} type="button">
+            Doplatit
+          </button>
+        </div>
       </div>
     </div>
   );
