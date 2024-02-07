@@ -58,7 +58,7 @@ export default function UpdateReservation() {
       timeTo,
       place,
       charge,
-      paid:true,
+      paid: true,
       confirmed,
     };
 
@@ -67,8 +67,8 @@ export default function UpdateReservation() {
     });
 
     router.push('/');
-      
-    
+
+
   };
 
   //box a typography

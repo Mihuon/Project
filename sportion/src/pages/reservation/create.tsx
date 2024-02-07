@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useCreateReservationMutation, usePlaceQuery } from '../../../generated/graphql';
+import { useCreateReservationMutation, usePlaceQuery, useReservationQuery } from '../../../generated/graphql';
 import { authUtils } from '../../firebase/authUtils';
 import { useAuthContext } from '@/components/auth-context-provider';
 import Select from 'react-select';
@@ -17,6 +17,7 @@ export default function Page() {
   const [profile, setUser] = useState(user?.uid);
 
   const placeData = usePlaceQuery();
+  const { data: ReservationData } = useReservationQuery();
 
   const router = useRouter();
   const [createReservation] = useCreateReservationMutation();
@@ -25,28 +26,45 @@ export default function Page() {
     event.preventDefault();
 
     const createReservationHandler = async () => {
-      
-      try {
-  const placeCost = placeData.data?.place.find((plc) => plc.id === place)?.cost;
-        
-  
-  const hours = Math.abs(Number(new Date(timeFrom)) - Number(new Date(timeTo))) / 3600000;
-  const tempo = placeCost*hours;
 
-console.log("tempo, placecost, hours",tempo, placeCost, hours);
-        const result = await createReservation({
-          variables: {
-            name: name,
-            timeFrom: timeFrom.toString(),
-            timeTo: timeTo.toString(),
-            place: place,
-            charge: tempo,
-            paid: false,
-            confirmed: false,
-            profile: profile
-          },
+      try {
+
+        const overlap = ReservationData?.reservation?.find((r) => {
+          const reservationStart = r.timeFrom; const reservationEnd = r.timeTo; const newReservationStart = timeFrom; const newReservationEnd = timeTo
+          return (
+            //Novy start v Stare rezervaci || Novy konec v stare rezervaci || Nova rezervace pres starou rezervaci
+            (newReservationStart >= reservationStart && newReservationStart < reservationEnd) || (newReservationEnd > reservationStart && newReservationEnd <= reservationEnd) || (newReservationStart <= reservationStart && newReservationEnd >= reservationEnd)
+          );
         });
 
+        const placeCost = placeData.data?.place.find((plc) => plc.id === place)?.cost;
+
+
+        const hours = Math.abs(Number(new Date(timeFrom)) - Number(new Date(timeTo))) / 3600000;
+
+
+        console.log("tempo, placecost, hours", placeCost, hours);
+
+        if (timeFrom > timeTo) {
+          console.error("Bad Time");
+        }
+        else if (overlap) {
+          console.error("Overlap");
+        }
+        else {
+          const result = await createReservation({
+            variables: {
+              name: name,
+              timeFrom: timeFrom.toString(),
+              timeTo: timeTo.toString(),
+              place: place,
+              charge: Math.floor(placeCost * hours),
+              paid: false,
+              confirmed: false,
+              profile: profile
+            },
+          });
+        }
       } catch (error) {
         console.error(error);
       }
@@ -93,62 +111,7 @@ console.log("tempo, placecost, hours",tempo, placeCost, hours);
               ))}
               required
             />
-
-            {/* <select
-              onChange={(e) => setPlace(e.target.value)}
-              required
-            >
-              <option selected disabled>Select Place</option>
-              {usePlaceQuery().data?.place.map((place) => (
-              <option key={place.id} value={place.id?.toString()}>{place.name}</option>
-              ))}
-            </select> */}
           </label>
-          {/* <label>
-            <p>Charge</p>
-            <input
-              onChange={(e) => setCharge(e.target.value)}
-              required
-              type="number"
-            />
-          </label> */}
-          {/* <label>
-            <p>Paid</p>
-            <select
-              onChange={(e) => setPaid(e.target.value === 'true')}
-              required
-            >
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
-          </label>
-
-          <label>
-            <p>Confirmed</p>
-            <select
-              onChange={(e) => setConfirmed(e.target.value === 'true')}
-              required
-            >
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
-          </label> */}
-          {/* <label>
-            <p>Paid</p>
-            <Select
-              onChange={(SelectedOption: any) => setPaid(SelectedOption.value)}
-              options={[{ value: true, label: "Yes"},{ value: false, label: "No"}]}
-              required
-            />
-          </label>
-          <label>
-            <p>Confirmed</p>
-            <Select
-              onChange={(SelectedOption: any) => setConfirmed(SelectedOption.value)}
-              options={[{ value: true, label: "Yes"},{ value: false, label: "No"}]}
-              required
-            />
-          </label> */}
           <button type="submit">Vytvořit</button>
         </form>
       </div>

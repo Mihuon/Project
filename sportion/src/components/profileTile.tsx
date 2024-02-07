@@ -10,19 +10,19 @@ export const ProfileTile: FC<Props> = (props) => {
   const {
     profile: { uid, name, surname, credit, admin },
   } = props;
-    return (
-      <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
-          </Avatar>
-        }
-        action={
-          <IconButton aria-label="settings">
-          </IconButton>
-        }
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
-      />
-    );
-  };
+  return (
+    <CardHeader
+      avatar={
+        <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+          R
+        </Avatar>
+      }
+      action={
+        <IconButton aria-label="settings">
+        </IconButton>
+      }
+      title="Shrimp and Chorizo Paella"
+      subheader="September 14, 2016"
+    />
+  );
+};

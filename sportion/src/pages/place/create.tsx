@@ -33,28 +33,28 @@ export default function Page() {
   return (
     <div className='wrapper'>
       <div className="form-wrapper">
-      <div className="form">
-        <h1>Vytvořit sportoviště</h1>
-        <form onSubmit={handleForm} className="form">
-          <label>
-            <p>Název</p>
-            <input
-              onChange={(e) => setName(e.target.value)}
-              required
-              type="text"
-            />
-          </label>
-          <label>
-            <p>Cena</p>
-            <input
-              onChange={(e) => setCost(e.target.value)}
-              required
-              type="number"
-            />
-          </label>
-          <button type="submit">Vytvořit</button>
-        </form>
-      </div>
+        <div className="form">
+          <h1>Vytvořit sportoviště</h1>
+          <form onSubmit={handleForm} className="form">
+            <label>
+              <p>Název</p>
+              <input
+                onChange={(e) => setName(e.target.value)}
+                required
+                type="text"
+              />
+            </label>
+            <label>
+              <p>Cena</p>
+              <input
+                onChange={(e) => setCost(e.target.value)}
+                required
+                type="number"
+              />
+            </label>
+            <button type="submit">Vytvořit</button>
+          </form>
+        </div>
       </div>
     </div>
   );

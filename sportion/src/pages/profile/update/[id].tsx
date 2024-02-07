@@ -53,53 +53,53 @@ export default function UpdateProfile() {
   return (
     <div className='wrapper'>
       <div className="form-wrapper">
-    <div className='form'>
-        <h1>Upravit profil</h1>
-        <form onSubmit={handleForm} className="form">
-          
-          <label>
-            <p>Jméno</p>
-            <input
-              onChange={(e) => setName(e.target.value)}
-              required
-              type="text"
-              value={name}
-            />
-          </label>
-          <label>
-            <p>Příjmení</p>
-            <input
-              onChange={(e) => setSurname(e.target.value)}
-              required
-              type="text"
-              value={surname}
-            />
-          </label>
-          <label>
-            <p>Kredit</p>
-            <input
-              onChange={(e) => setCredit(e.target.value)}
-              required
-              type="number"
-              value={credit}
-            />
-          </label>
-          
-          <label>
-          <p>Administrátor</p>
-            <Select
-              onChange={(SelectedOption: any) => setAdmin(SelectedOption.value)}
-              options={[{ value: true, label: "Ano"},{ value: false, label: "Ne"}]}
-              required
-              value={[{ value: true, label: "Ano"},{ value: false, label: "Ne"}].find((p) => p.value === admin)}
-            />
-          </label>
-          
-          
-          <button type="submit">Upravit profil</button>
-        </form>
+        <div className='form'>
+          <h1>Upravit profil</h1>
+          <form onSubmit={handleForm} className="form">
+
+            <label>
+              <p>Jméno</p>
+              <input
+                onChange={(e) => setName(e.target.value)}
+                required
+                type="text"
+                value={name}
+              />
+            </label>
+            <label>
+              <p>Příjmení</p>
+              <input
+                onChange={(e) => setSurname(e.target.value)}
+                required
+                type="text"
+                value={surname}
+              />
+            </label>
+            <label>
+              <p>Kredit</p>
+              <input
+                onChange={(e) => setCredit(e.target.value)}
+                required
+                type="number"
+                value={credit}
+              />
+            </label>
+
+            <label>
+              <p>Administrátor</p>
+              <Select
+                onChange={(SelectedOption: any) => setAdmin(SelectedOption.value)}
+                options={[{ value: true, label: "Ano" }, { value: false, label: "Ne" }]}
+                required
+                value={[{ value: true, label: "Ano" }, { value: false, label: "Ne" }].find((p) => p.value === admin)}
+              />
+            </label>
+
+
+            <button type="submit">Upravit profil</button>
+          </form>
+        </div>
       </div>
-    </div>
     </div>
   );
 }

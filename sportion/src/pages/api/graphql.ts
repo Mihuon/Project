@@ -249,7 +249,6 @@ const resolvers = {
                 });
             });
             
-            console.log("BREKEKEE",data);
             return data;
         },
         githubUsers: async () => {

@@ -8,8 +8,8 @@ import { IndexGrid } from '@/components/indexGrid'
 export default function Home() {
   return (
     <>
-      <PrimaryAppbar />
-      <IndexGrid/>
+      {/* <PrimaryAppbar /> */}
+      <IndexGrid />
     </>
   )
 }

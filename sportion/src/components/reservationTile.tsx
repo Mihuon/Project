@@ -8,14 +8,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useDeleteReservationMutation, usePlaceQuery, useProfileQuery, useMyReservationQuery, useMyReservationLazyQuery, useMyProfileLazyQuery, useMyProfileQuery, useReservationQuery } from '../../generated/graphql';
+import { useDeleteReservationMutation, usePlaceQuery, useProfileQuery, useMyReservationQuery, useMyReservationLazyQuery, useMyProfileLazyQuery, useMyProfileQuery, useReservationQuery, DeleteReservationDocument } from '../../generated/graphql';
 import { useAuthContext } from './auth-context-provider';
 import { profile } from 'console';
 
 const ReservationsTable = () => {
+  //!
   useMyProfileQuery().refetch();
-  useReservationQuery().refetch();
-  useMyReservationQuery().refetch();
+  // useReservationQuery().refetch();
+  // useMyReservationQuery().refetch();
 
   const { data: placeData } = usePlaceQuery();
   const { user } = useAuthContext();
@@ -42,8 +43,9 @@ const ReservationsTable = () => {
 
   const [deleteReservation] = useDeleteReservationMutation();
   const handleDelete = async (reservationId: string) => {
-    await deleteReservation({ variables: { id: reservationId } });
-    window.location.reload();
+    //!
+    // await deleteReservation({ variables: { id: reservationId }});
+    await deleteReservation({ variables: { id: reservationId }, refetchQueries:[{query:DeleteReservationDocument}],});
   };
 
 
@@ -88,7 +90,7 @@ const ReservationsTable = () => {
                 {/* <TableCell align="center">{reservation.timeFrom} - {reservation.timeTo}</TableCell> */}
                 <TableCell align="center">
                   {`${new Date(reservation.timeFrom).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${new Date(reservation.timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
-                  <br/> {new Date(reservation.timeFrom).toLocaleDateString([],{ day: 'numeric', month: 'short' })}
+                  <br /> {new Date(reservation.timeFrom).toLocaleDateString([], { day: 'numeric', month: 'short' })}
                 </TableCell>
 
                 <TableCell align="center">
@@ -99,14 +101,14 @@ const ReservationsTable = () => {
                 {/* <TableCell align="center">{reservation.paid ? 'Ano' : 'Ne'}</TableCell> */}
                 {/* <TableCell align="center">{reservation.confirmed ? 'Ano' : 'Ne'}</TableCell> */}
                 <TableCell align="center">
-                  <Button><Link href={`/reservation/detail/${reservation.id}`}>Detail</Link></Button>
-                  {(reservation.paid != true && reservation.confirmed == true && profileData?.admin==true) ? <Button><Link href={`/reservation/localpay/${reservation.id}`}>Doplatit</Link></Button> : null}
+                  <Link href={`/reservation/detail/${reservation.id}`}><Button>Detail</Button></Link>
+                  {(reservation.paid != true && reservation.confirmed == true && profileData?.admin == true) ? <Link href={`/reservation/localpay/${reservation.id}`}><Button>Doplatit</Button> </Link> : null}
 
-                  {(reservation.paid != true && reservation.confirmed == true && reservation.profile == profileData?.uid) ? <Button><Link href={`/reservation/pay/${reservation.id}`}>Zaplatit</Link></Button> : null}
+                  {(reservation.paid != true && reservation.confirmed == true && reservation.profile == profileData?.uid) ? <Link href={`/reservation/pay/${reservation.id}`}><Button>Zaplatit</Button></Link> : null}
 
-                  {(profileData?.admin == true && reservation.confirmed != true) ? <Button><Link href={`/reservation/confirm/${reservation.id}`}>Potvrdit</Link></Button> : null}
+                  {(profileData?.admin == true && reservation.confirmed != true) ? <Link href={`/reservation/confirm/${reservation.id}`}><Button>Potvrdit</Button></Link> : null}
 
-                  {(profileData?.admin == true) ? <Button><Link href={`/reservation/update/${reservation.id}`}>Upravit</Link></Button> : null}
+                  {(profileData?.admin == true) ? <Link href={`/reservation/update/${reservation.id}`}><Button>Upravit</Button></Link> : null}
 
 
                   {(reservation.paid != true || profileData?.admin == true) ? <Button color="error" onClick={() => handleDelete(reservation.id)}>Smazat</Button> : null}

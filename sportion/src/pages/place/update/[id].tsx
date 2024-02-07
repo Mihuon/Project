@@ -43,30 +43,30 @@ export default function UpdatePlace() {
   return (
     <div className="wrapper">
       <div className="form-wrapper">
-      <div className="form">
-        <h1>Upravit sportoviště</h1>
-        <form onSubmit={handleForm} className="form">
-          <label>
-            <p>Název</p>
-            <input
-              onChange={(e) => setName(e.target.value)}
-              required
-              type="text"
-              value={name}
-            />
-          </label>
-          <label>
-            <p>Cena</p>
-            <input
-              onChange={(e) => setCost(e.target.value)}
-              required
-              type="number"
-              value={cost}
-            />
-          </label>
-          <button type="submit">Upravit</button>
-        </form>
-      </div>
+        <div className="form">
+          <h1>Upravit sportoviště</h1>
+          <form onSubmit={handleForm} className="form">
+            <label>
+              <p>Název</p>
+              <input
+                onChange={(e) => setName(e.target.value)}
+                required
+                type="text"
+                value={name}
+              />
+            </label>
+            <label>
+              <p>Cena</p>
+              <input
+                onChange={(e) => setCost(e.target.value)}
+                required
+                type="number"
+                value={cost}
+              />
+            </label>
+            <button type="submit">Upravit</button>
+          </form>
+        </div>
       </div>
     </div>
   );

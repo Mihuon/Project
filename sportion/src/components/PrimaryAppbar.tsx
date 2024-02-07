@@ -15,7 +15,7 @@ import { FC } from 'react';
 import { useAuthContext } from './auth-context-provider';
 import { authUtils } from '@/firebase/authUtils';
 import Link from 'next/link';
-import {useMyProfileQuery } from '../../generated/graphql';
+import { useMyProfileQuery } from '../../generated/graphql';
 import { Avatar, CardHeader } from '@mui/material';
 import { blue } from '@mui/material/colors';
 type Props = {};
@@ -23,7 +23,7 @@ type Props = {};
 export const PrimaryAppbar: FC<Props> = () => {
   const { user } = useAuthContext();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const { data } = useMyProfileQuery({skip:!user});
+  const { data } = useMyProfileQuery({ skip: !user });
   const profileData = data?.myProfile.find((profile) => profile?.uid === user?.uid);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -65,30 +65,30 @@ export const PrimaryAppbar: FC<Props> = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      
+
       {user?.email != null || user?.email != undefined ? (
         <div>
-        <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: 'rgb(220, 20, 50)' }}>
-            {`${profileData?.name?.charAt(0)}${profileData?.surname?.charAt(0)}`}
-          </Avatar>
-        }
-        // action={
-        //   <IconButton>
-        //     Detail
-        //   </IconButton>
-        // }
-        title={`${profileData?.name} ${profileData?.surname}`}
-        subheader={`${profileData?.credit} Kč`}
-      />
+          <CardHeader
+            avatar={
+              <Avatar sx={{ bgcolor: 'rgb(220, 20, 50)' }}>
+                {`${profileData?.name?.charAt(0)}${profileData?.surname?.charAt(0)}`}
+              </Avatar>
+            }
+            // action={
+            //   <IconButton>
+            //     Detail
+            //   </IconButton>
+            // }
+            title={`${profileData?.name} ${profileData?.surname}`}
+            subheader={`${profileData?.credit} Kč`}
+          />
           <Link href={`/profile/modify/${profileData?.id}`}>
-                    <MenuItem>Upravit</MenuItem>
-                  </Link></div>
+            <MenuItem>Upravit</MenuItem>
+          </Link></div>
       )
-      :null}
-      {user?.email == null ? (<Link key="login" href="./login"><MenuItem onClick={handleMenuClose}>Přihlásit se</MenuItem></Link>) 
-      : (<MenuItem onClick={authUtils.logout}>Odhlásit se</MenuItem>)}
+        : null}
+      {user?.email == null ? (<Link key="login" href="./login"><MenuItem onClick={handleMenuClose}>Přihlásit se</MenuItem></Link>)
+        : (<MenuItem onClick={authUtils.logout}>Odhlásit se</MenuItem>)}
     </Menu>
   );
 
@@ -123,7 +123,7 @@ export const PrimaryAppbar: FC<Props> = () => {
     </Menu>
   );
   return (
-    <Box  sx={{ flexGrow: 1 }}>
+    <Box className='appBarBox' sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar className='appBar' >
           {/* <IconButton

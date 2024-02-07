@@ -15,7 +15,7 @@ import { useAuthContext } from './auth-context-provider';
 type Props = {};
 const PlaceTable: FC<Props> = () => {
   usePlaceQuery().refetch()
-  
+
   const { data } = usePlaceQuery();
   const [deletePlace] = useDeletePlaceMutation();
   const handleDelete = (placeId: string) => {
@@ -44,8 +44,8 @@ const PlaceTable: FC<Props> = () => {
               </TableCell>
               <TableCell align="center">{place.cost}</TableCell>
               <TableCell align="center">
-              <Button><Link href={`/place/detail/${place.id}`}>Detail</Link></Button>
-              {(profileData?.admin == true) ? (<><Button><Link href={`/place/update/${place.id}`}>Upravit</Link></Button><Button color="error" onClick={() => handleDelete(place.id)}>Smazat</Button></>):null}
+                <Link href={`/place/detail/${place.id}`}><Button>Detail</Button></Link>
+                {(profileData?.admin == true) ? (<><Link href={`/place/update/${place.id}`}><Button>Upravit</Button></Link><Button color="error" onClick={() => handleDelete(place.id)}>Smazat</Button></>) : null}
               </TableCell>
             </TableRow>
           ))}

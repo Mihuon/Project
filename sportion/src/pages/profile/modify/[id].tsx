@@ -52,10 +52,10 @@ export default function UpdateProfile() {
   return (
     <div className='wrapper'>
       <div className="form-wrapper">
-    <div className='form'>
-        <h1>Upravit profil</h1>
-        <form onSubmit={handleForm} className="form">
-          {/* <label>
+        <div className='form'>
+          <h1>Upravit profil</h1>
+          <form onSubmit={handleForm} className="form">
+            {/* <label>
             <p>Uid</p>
             <input
               onChange={(e) => setUid(e.target.value)}
@@ -64,25 +64,25 @@ export default function UpdateProfile() {
               value={uid}
             />
           </label> */}
-          <label>
-            <p>Jméno</p>
-            <input
-              onChange={(e) => setName(e.target.value)}
-              required
-              type="text"
-              value={name}
-            />
-          </label>
-          <label>
-            <p>Příjmení</p>
-            <input
-              onChange={(e) => setSurname(e.target.value)}
-              required
-              type="text"
-              value={surname}
-            />
-          </label>
-          {/* <label>
+            <label>
+              <p>Jméno</p>
+              <input
+                onChange={(e) => setName(e.target.value)}
+                required
+                type="text"
+                value={name}
+              />
+            </label>
+            <label>
+              <p>Příjmení</p>
+              <input
+                onChange={(e) => setSurname(e.target.value)}
+                required
+                type="text"
+                value={surname}
+              />
+            </label>
+            {/* <label>
             <p>Credit</p>
             <input
               onChange={(e) => setCredit(e.target.value)}
@@ -102,9 +102,9 @@ export default function UpdateProfile() {
               <option value="false">No</option>
             </select>
           </label> */}
-          <button type="submit">Upravit</button>
-        </form>
-      </div>
+            <button type="submit">Upravit</button>
+          </form>
+        </div>
       </div>
     </div>
   );
