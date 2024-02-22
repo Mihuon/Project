@@ -3,12 +3,12 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { PrimaryAppbar } from '@/components/primaryAppbar'
-import { IndexGrid } from '@/components/indexGrid'
+import { HomeGrid } from '@/components/homeGrid'
 
 export default function Home() {
   return (
     <>
-      <IndexGrid />
+    <HomeGrid/>
     </>
   )
 }

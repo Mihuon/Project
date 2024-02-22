@@ -30,10 +30,11 @@ export default function Page() {
       try {
 
         const overlap = ReservationData?.reservation?.find((r) => {
+          const reservationPlace = r.place;
           const reservationStart = r.timeFrom; const reservationEnd = r.timeTo; const newReservationStart = timeFrom; const newReservationEnd = timeTo
           return (
             //Novy start v Stare rezervaci || Novy konec v stare rezervaci || Nova rezervace pres starou rezervaci
-            (newReservationStart >= reservationStart && newReservationStart < reservationEnd) || (newReservationEnd > reservationStart && newReservationEnd <= reservationEnd) || (newReservationStart <= reservationStart && newReservationEnd >= reservationEnd)
+            ((newReservationStart >= reservationStart && newReservationStart < reservationEnd) || (newReservationEnd > reservationStart && newReservationEnd <= reservationEnd) || (newReservationStart <= reservationStart && newReservationEnd >= reservationEnd) && reservationPlace==place)
           );
         });
 
@@ -91,6 +92,7 @@ export default function Page() {
             <input
               onChange={(e) => setTimeFrom(e.target.value)}
               required
+              min={new Date().toString()}
               type="datetime-local"
             />
           </label>
@@ -98,6 +100,7 @@ export default function Page() {
             <p>Konec</p>
             <input
               onChange={(e) => setTimeTo(e.target.value)}
+              min={timeFrom}
               required
               type="datetime-local"
             />

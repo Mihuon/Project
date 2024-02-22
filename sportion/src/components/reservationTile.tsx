@@ -8,13 +8,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useDeleteReservationMutation, usePlaceQuery, useProfileQuery, useMyReservationQuery, useMyReservationLazyQuery, useMyProfileLazyQuery, useMyProfileQuery, useReservationQuery, DeleteReservationDocument } from '../../generated/graphql';
+import { useDeleteReservationMutation, usePlaceQuery, useProfileQuery, useMyReservationQuery, useMyReservationLazyQuery, useMyProfileLazyQuery, useMyProfileQuery, useReservationQuery, DeleteReservationDocument, MyReservationDocument, ProfileDocument, ReservationDocument } from '../../generated/graphql';
 import { useAuthContext } from './auth-context-provider';
-import { profile } from 'console';
+import { profile, profileEnd } from 'console';
 
 const ReservationsTable = () => {
   //!
-  useMyProfileQuery().refetch();
+  // useMyProfileQuery().refetch();
   // useReservationQuery().refetch();
   // useMyReservationQuery().refetch();
 
@@ -29,15 +29,15 @@ const ReservationsTable = () => {
 
   let reservationData;
 
-  const { data: adminProfilesData } = useProfileQuery({ skip: !user });
+  const { data: adminProfilesData } = useProfileQuery({ refetchQueries: [{ query: ProfileDocument }], awaitRefetchQueries: true });
 
   if (profileData?.admin === true) {
-    const { data: adminReservationData } = useReservationQuery({ skip: !user });
+    const { data: adminReservationData } = useReservationQuery({ refetchQueries: [{ query: ReservationDocument }], awaitRefetchQueries: true });
     reservationData = adminReservationData?.reservation;
     // const { data: adminProfilesData } = useProfileQuery();
     // profilesData = adminProfilesData?.profile;
   } else {
-    const { data: myReservationData } = useMyReservationQuery({ skip: !user });
+    const { data: myReservationData } = useMyReservationQuery({ refetchQueries: [{ query: MyReservationDocument }], awaitRefetchQueries: true });
     reservationData = myReservationData?.myReservation;
   }
 
@@ -45,7 +45,11 @@ const ReservationsTable = () => {
   const handleDelete = async (reservationId: string) => {
     //!
     // await deleteReservation({ variables: { id: reservationId }});
-    await deleteReservation({ variables: { id: reservationId }, refetchQueries:[{query:DeleteReservationDocument}],});
+    await deleteReservation({
+      variables: { id: reservationId },
+      refetchQueries: [{ query: ReservationDocument, variables: { reservationId } }],
+      awaitRefetchQueries: true
+    });
   };
 
 
@@ -79,7 +83,7 @@ const ReservationsTable = () => {
                   {reservation.name}
                 </TableCell>
 
-                {profileData?.admin === true ?
+                {profileData?.admin ?
                   <TableCell align="center">{adminProfilesData?.profile?.find((profile) => profile?.uid === reservation.profile)?.name} {adminProfilesData?.profile?.find((profile) => profile?.uid === reservation.profile)?.surname}</TableCell>
                   : null}
                 {/* <TableCell>prof</TableCell> */}
@@ -94,24 +98,24 @@ const ReservationsTable = () => {
                 </TableCell>
 
                 <TableCell align="center">
-                  {(reservation.paid == true && reservation.confirmed == true) ? 'Zaplaceno' : null}
-                  {(reservation.paid == false && reservation.confirmed == true) ? 'Potvrzeno' : null}
-                  {(reservation.paid == false && reservation.confirmed == false) ? 'Nepotvrzeno' : null}
+                  {(reservation.paid && reservation.confirmed) ? 'Zaplaceno' : null}
+                  {(!reservation.paid && reservation.confirmed) ? 'Potvrzeno' : null}
+                  {(!reservation.paid && !reservation.confirmed) ? 'Nepotvrzeno' : null}
                 </TableCell>
                 {/* <TableCell align="center">{reservation.paid ? 'Ano' : 'Ne'}</TableCell> */}
                 {/* <TableCell align="center">{reservation.confirmed ? 'Ano' : 'Ne'}</TableCell> */}
                 <TableCell align="center">
                   <Link href={`/reservation/detail/${reservation.id}`}><Button>Detail</Button></Link>
-                  {(reservation.paid != true && reservation.confirmed == true && profileData?.admin == true) ? <Link href={`/reservation/localpay/${reservation.id}`}><Button>Doplatit</Button> </Link> : null}
+                  {(!reservation.paid && reservation.confirmed && profileData?.admin) ? <Link href={`/reservation/localpay/${reservation.id}`}><Button>Doplatit</Button> </Link> : null}
 
-                  {(reservation.paid != true && reservation.confirmed == true && reservation.profile == profileData?.uid) ? <Link href={`/reservation/pay/${reservation.id}`}><Button>Zaplatit</Button></Link> : null}
+                  {(!reservation.paid && reservation.confirmed && reservation.profile == profileData?.uid) ? <Link href={`/reservation/pay/${reservation.id}`}><Button>Zaplatit</Button></Link> : null}
 
-                  {(profileData?.admin == true && reservation.confirmed != true) ? <Link href={`/reservation/confirm/${reservation.id}`}><Button>Potvrdit</Button></Link> : null}
+                  {(profileData?.admin && !reservation.confirmed) ? <Link href={`/reservation/confirm/${reservation.id}`}><Button>Potvrdit</Button></Link> : null}
 
-                  {(profileData?.admin == true) ? <Link href={`/reservation/update/${reservation.id}`}><Button>Upravit</Button></Link> : null}
+                  {(profileData?.admin) ? <Link href={`/reservation/update/${reservation.id}`}><Button>Upravit</Button></Link> : null}
 
 
-                  {(reservation.paid != true || profileData?.admin == true) ? <Button color="error" onClick={() => handleDelete(reservation.id)}>Smazat</Button> : null}
+                  {(!reservation.paid || profileData?.admin) ? <Button color="error" onClick={() => handleDelete(reservation.id)}>Smazat</Button> : null}
                 </TableCell>
               </TableRow>
             );
