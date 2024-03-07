@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useCreateReservationMutation, usePlaceQuery, useReservationQuery } from '../../../generated/graphql';
+import { ReservationDocument, useCreateReservationMutation, usePlaceQuery, useReservationQuery } from '../../../generated/graphql';
 import { authUtils } from '../../firebase/authUtils';
 import { useAuthContext } from '@/components/auth-context-provider';
 import Select from 'react-select';
@@ -15,37 +15,24 @@ export default function Page() {
   const [paid, setPaid] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [profile, setUser] = useState(user?.uid);
-
   const placeData = usePlaceQuery();
   const { data: ReservationData } = useReservationQuery();
-
   const router = useRouter();
   const [createReservation] = useCreateReservationMutation();
-
   const handleForm = async (event: FormEvent) => {
     event.preventDefault();
-
     const createReservationHandler = async () => {
-
       try {
-
         const overlap = ReservationData?.reservation?.find((r) => {
           const reservationPlace = r.place;
           const reservationStart = r.timeFrom; const reservationEnd = r.timeTo; const newReservationStart = timeFrom; const newReservationEnd = timeTo
           return (
-            //Novy start v Stare rezervaci || Novy konec v stare rezervaci || Nova rezervace pres starou rezervaci
-            ((newReservationStart >= reservationStart && newReservationStart < reservationEnd) || (newReservationEnd > reservationStart && newReservationEnd <= reservationEnd) || (newReservationStart <= reservationStart && newReservationEnd >= reservationEnd) && reservationPlace==place)
+            //Pouze na stejném místě && (Novy start v Stare rezervaci || Novy konec v stare rezervaci || Nova rezervace pres starou rezervaci)
+            (reservationPlace == place && (newReservationStart >= reservationStart && newReservationStart < reservationEnd) || (newReservationEnd > reservationStart && newReservationEnd <= reservationEnd) || (newReservationStart <= reservationStart && newReservationEnd >= reservationEnd))
           );
         });
-
         const placeCost = placeData.data?.place.find((plc) => plc.id === place)?.cost;
-
-
         const hours = Math.abs(Number(new Date(timeFrom)) - Number(new Date(timeTo))) / 3600000;
-
-
-        console.log("tempo, placecost, hours", placeCost, hours);
-
         if (timeFrom > timeTo) {
           console.error("Bad Time");
         }
@@ -63,7 +50,7 @@ export default function Page() {
               paid: false,
               confirmed: false,
               profile: profile
-            },
+            },refetchQueries: [{ query: ReservationDocument }], awaitRefetchQueries: true 
           });
         }
       } catch (error) {

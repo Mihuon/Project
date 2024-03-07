@@ -102,8 +102,6 @@ const ReservationsTable = () => {
                   {(!reservation.paid && reservation.confirmed) ? 'Potvrzeno' : null}
                   {(!reservation.paid && !reservation.confirmed) ? 'Nepotvrzeno' : null}
                 </TableCell>
-                {/* <TableCell align="center">{reservation.paid ? 'Ano' : 'Ne'}</TableCell> */}
-                {/* <TableCell align="center">{reservation.confirmed ? 'Ano' : 'Ne'}</TableCell> */}
                 <TableCell align="center">
                   <Link href={`/reservation/detail/${reservation.id}`}><Button>Detail</Button></Link>
                   {(!reservation.paid && reservation.confirmed && profileData?.admin) ? <Link href={`/reservation/localpay/${reservation.id}`}><Button>Doplatit</Button> </Link> : null}
@@ -124,16 +122,11 @@ const ReservationsTable = () => {
       </Table>
     </TableContainer>);
 };
-
 export const ReservationTile = () => {
   return (
-    // <Paper sx={{ maxWidth: 500 }}>
     <Paper>
-      {/* <Link  href="/reservation/create">
-        <MenuItem >Přidat</MenuItem>
-      </Link> */}
       <Typography className="tileHead" align="center" variant="h4">
-        Rezervace
+        <title>Rezervace</title>
       </Typography>
       <ReservationsTable />
     </Paper>

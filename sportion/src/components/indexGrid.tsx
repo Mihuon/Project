@@ -9,6 +9,7 @@ import { ToolsTile } from "./toolsTile";
 import router from "next/router";
 import { title } from "process";
 import { CardTile } from "./cardTile";
+import InfoIcon from '@mui/icons-material/Info';
 type Props = {};
 
 export const IndexGrid: FC<Props> = () => {
@@ -40,7 +41,7 @@ export const IndexGrid: FC<Props> = () => {
         </Grid> */}
 
         </Grid>) : (
-          // router.push("/homePage")
+        // router.push("/homePage")
         // <div className="wrapper">
         //   <div className="form-wrapper">
         //     <h1>Žádný uživatel není přihlášený</h1><div className="temp">
@@ -49,55 +50,57 @@ export const IndexGrid: FC<Props> = () => {
         // </div>
 
         <>
-        
-        <Grid className="homeGrid" container>
-                <Grid item className="i_item1">
-                    {/* <img className="i_item1" src="https://polanka.ostrava.cz/cs/o-polance/fotogalerie/ostatni/budovy/budova-a/fotbalove-hriste/image" alt="image" /> */}
-                    <img className="i_item1" src="https://www.arealsportu.cz/cache/xart_thumbnails/89539c8f5bad07d4f68fcb15d27b0119.jpg" alt="image" />
-                <h5 className="Title">Sportion</h5></Grid>
 
-                <Grid item className="i_item2">
-                    <CardTile/>
-                </Grid>
+          <Grid className="homeGrid" container>
+            <Grid item className="i_item1">
+              {/* <img className="i_item5" src="https://www.arealsportu.cz/cache/xart_thumbnails/aceea97b35091c98dceeef7446821339.JPG" alt="image" /> */}
+              {/* <img className="i_item1" src="https://polanka.ostrava.cz/cs/o-polance/fotogalerie/ostatni/budovy/budova-a/fotbalove-hriste/image" alt="image" /> */}
+              <img className="i_item1" src="https://www.arealsportu.cz/cache/xart_thumbnails/89539c8f5bad07d4f68fcb15d27b0119.jpg" alt="image" />
+              <h5 className="Title">Sportion</h5></Grid>
 
-                
-                <div className="wrapper">
-          <Paper className="form-wrapper2">
-            <h1>Pro vstup se přihlaste</h1><div className="temp">
-              <Link href={`./login`}><Button variant="contained">Přihlásit se</Button></Link></div>
-          </Paper>
-        </div>
-
-                <Grid item className="i_item4">
-                    <CardTile/>
-                </Grid>
-
-                <Grid item className="i_item5">
-                    <img className="i_item5" src="https://www.arealsportu.cz/cache/xart_thumbnails/aceea97b35091c98dceeef7446821339.JPG" alt="image" />
-                </Grid>
+            <Grid item className="i_item2">
+              <CardTile icon={<InfoIcon fontSize='large' className='temp' />} text={"XXXXXXXXXXXXXXXXXXXXX"} />
+            </Grid>
 
 
+            <div className="wrapper">
+              <Paper className="form-wrapper2">
+                <h1>Pro vstup se přihlaste</h1><div className="temp">
+                  <Link href={`./login`}><Button variant="contained">Přihlásit se</Button></Link></div>
+              </Paper>
+            </div>
 
-                <Grid item className="i_item2">
-                    <CardTile/>
-                </Grid>
+            <Grid item className="i_item4">
+              <CardTile icon={<InfoIcon fontSize='large' className='temp' />} text={"Text"} />
+            </Grid>
 
-                <Grid item className="i_item3">
-                    <CardTile/>
-                </Grid>
+            <Grid item className="i_item5">
+              {/* <img className="i_item1" src="https://www.arealsportu.cz/cache/xart_thumbnails/89539c8f5bad07d4f68fcb15d27b0119.jpg" alt="image" /> */}
+              <img className="i_item5" src="https://www.arealsportu.cz/cache/xart_thumbnails/aceea97b35091c98dceeef7446821339.JPG" alt="image" />
+            </Grid>
 
-                {/* <div className="wrapper">
+
+
+            <Grid item className="i_item2">
+              <CardTile icon={<InfoIcon fontSize='large' className='temp' />} text={"Text"} />
+            </Grid>
+
+            <Grid item className="i_item3">
+              <CardTile icon={<InfoIcon fontSize='large' className='temp' />} text={"Text"} />
+            </Grid>
+
+            {/* <div className="wrapper">
           <div className="form-wrapper2">
             <h1>Žádný uživatel není přihlášený</h1><div className="temp">
               <Link href={`./login`}><Button variant="contained">Přihlásit se</Button></Link></div>
           </div>
         </div> */}
 
-                <Grid item className="i_item4">
-                    <CardTile/>
-                </Grid>
+            <Grid item className="i_item4">
+              <CardTile icon={<InfoIcon fontSize='large' className='temp' />} text={"Text"} />
+            </Grid>
 
-            </Grid></>
+          </Grid></>
       )}</>
 
   );

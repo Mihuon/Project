@@ -42,7 +42,7 @@ const PlaceTable: FC<Props> = () => {
               <TableCell align="center" component="th" scope="row">
                 {place.name}
               </TableCell>
-              <TableCell align="center">{place.cost}</TableCell>
+              <TableCell align="center">{place.cost} Kč</TableCell>
               <TableCell align="center">
                 <Link href={`/place/detail/${place.id}`}><Button>Detail</Button></Link>
                 {(profileData?.admin == true) ? (<><Link href={`/place/update/${place.id}`}><Button>Upravit</Button></Link><Button color="error" onClick={() => handleDelete(place.id)}>Smazat</Button></>) : null}
