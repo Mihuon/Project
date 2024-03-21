@@ -12,6 +12,10 @@ import Paper from '@mui/material/Paper';
 import { usePlaceQuery, useDeletePlaceMutation, useMyProfileQuery } from '../../generated/graphql';
 import { useAuthContext } from './auth-context-provider';
 
+import InfoIcon from '@mui/icons-material/Info';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
 type Props = {};
 const PlaceTable: FC<Props> = () => {
   usePlaceQuery().refetch()
@@ -43,10 +47,16 @@ const PlaceTable: FC<Props> = () => {
                 {place.name}
               </TableCell>
               <TableCell align="center">{place.cost} Kč</TableCell>
-              <TableCell align="center">
+              {/* <TableCell align="center">
                 <Link href={`/place/detail/${place.id}`}><Button>Detail</Button></Link>
                 {(profileData?.admin == true) ? (<><Link href={`/place/update/${place.id}`}><Button>Upravit</Button></Link><Button color="error" onClick={() => handleDelete(place.id)}>Smazat</Button></>) : null}
+              </TableCell> */}
+
+              <TableCell align="center">
+                <Link href={`/place/detail/${place.id}`}><Button><InfoIcon fontSize='medium' className='temp' /></Button></Link>
+                {(profileData?.admin == true) ? (<><Link href={`/place/update/${place.id}`}><Button><EditNoteIcon fontSize='medium' className='temp' /></Button></Link><Button color="error" onClick={() => handleDelete(place.id)}><DeleteForeverIcon fontSize='medium' className='temp' /></Button></>) : null}
               </TableCell>
+              
             </TableRow>
           ))}
         </TableBody>

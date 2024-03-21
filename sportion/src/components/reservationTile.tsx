@@ -12,8 +12,13 @@ import { useDeleteReservationMutation, usePlaceQuery, useProfileQuery, useMyRese
 import { useAuthContext } from './auth-context-provider';
 import { profile, profileEnd } from 'console';
 
+import InfoIcon from '@mui/icons-material/Info';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
+import PaymentIcon from '@mui/icons-material/Payment';
 const ReservationsTable = () => {
-  //!
   // useMyProfileQuery().refetch();
   // useReservationQuery().refetch();
   // useMyReservationQuery().refetch();
@@ -43,7 +48,6 @@ const ReservationsTable = () => {
 
   const [deleteReservation] = useDeleteReservationMutation();
   const handleDelete = async (reservationId: string) => {
-    //!
     // await deleteReservation({ variables: { id: reservationId }});
     await deleteReservation({
       variables: { id: reservationId },
@@ -103,17 +107,19 @@ const ReservationsTable = () => {
                   {(!reservation.paid && !reservation.confirmed) ? 'Nepotvrzeno' : null}
                 </TableCell>
                 <TableCell align="center">
-                  <Link href={`/reservation/detail/${reservation.id}`}><Button>Detail</Button></Link>
+                  {/* <Link href={`/reservation/detail/${reservation.id}`}><Button>Detail</Button></Link>
                   {(!reservation.paid && reservation.confirmed && profileData?.admin) ? <Link href={`/reservation/localpay/${reservation.id}`}><Button>Doplatit</Button> </Link> : null}
-
                   {(!reservation.paid && reservation.confirmed && reservation.profile == profileData?.uid) ? <Link href={`/reservation/pay/${reservation.id}`}><Button>Zaplatit</Button></Link> : null}
-
                   {(profileData?.admin && !reservation.confirmed) ? <Link href={`/reservation/confirm/${reservation.id}`}><Button>Potvrdit</Button></Link> : null}
-
                   {(profileData?.admin) ? <Link href={`/reservation/update/${reservation.id}`}><Button>Upravit</Button></Link> : null}
+                  {(!reservation.paid || profileData?.admin) ? <Button color="error" onClick={() => handleDelete(reservation.id)}>Smazat</Button> : null} */}
 
-
-                  {(!reservation.paid || profileData?.admin) ? <Button color="error" onClick={() => handleDelete(reservation.id)}>Smazat</Button> : null}
+                  <Link href={`/reservation/detail/${reservation.id}`}><Button><InfoIcon fontSize='medium' className='temp' /></Button></Link>
+                  {(!reservation.paid && reservation.confirmed && profileData?.admin) ? <Link href={`/reservation/localpay/${reservation.id}`}><Button><PointOfSaleIcon fontSize='medium' className='temp' /></Button></Link> : null}
+                  {(!reservation.paid && reservation.confirmed && reservation.profile == profileData?.uid) ? <Link href={`/reservation/pay/${reservation.id}`}><Button><PaymentIcon fontSize='medium' className='temp' /></Button></Link> : null}
+                  {(profileData?.admin && !reservation.confirmed) ? <Link href={`/reservation/confirm/${reservation.id}`}><Button><CheckCircleIcon fontSize='medium' className='temp' /></Button></Link> : null}
+                  {(profileData?.admin) ? <Link href={`/reservation/update/${reservation.id}`}><Button><EditNoteIcon fontSize='medium' className='temp' /></Button></Link> : null}
+                  {(!reservation.paid || profileData?.admin) ? <Button color="error" onClick={() => handleDelete(reservation.id)}><DeleteForeverIcon fontSize='medium' className='temp' /></Button> : null}
                 </TableCell>
               </TableRow>
             );
@@ -126,7 +132,7 @@ export const ReservationTile = () => {
   return (
     <Paper>
       <Typography className="tileHead" align="center" variant="h4">
-        <title>Rezervace</title>
+        Rezervace
       </Typography>
       <ReservationsTable />
     </Paper>

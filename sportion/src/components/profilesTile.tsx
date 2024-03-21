@@ -9,6 +9,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useProfileQuery } from '../../generated/graphql';
 
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import AddCardIcon from '@mui/icons-material/AddCard';
+
 type Props = {};
 const ProfilesTable: FC<Props> = () => {
   const { data } = useProfileQuery();
@@ -29,8 +32,8 @@ const ProfilesTable: FC<Props> = () => {
               <TableCell align="center">{`${profile?.name} ${profile?.surname}`}</TableCell>
               <TableCell align="center">{profile?.credit} Kč</TableCell>
               <TableCell align="center">{(profile.admin == true) ? "Administrátor" : "Uživatel"}</TableCell>
-              <TableCell align="center"><Link href={`/profile/addcredit/${profile.id}`}><Button>Přidat kredit</Button></Link>
-                <Link href={`/profile/update/${profile.id}`}><Button>Upravit</Button></Link></TableCell>
+              <TableCell align="center"><Link href={`/profile/addcredit/${profile.id}`}><Button><AddCardIcon fontSize='medium' className='temp' /></Button></Link>
+                <Link href={`/profile/update/${profile.id}`}><Button><EditNoteIcon fontSize='medium' className='temp' /></Button></Link></TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -26,9 +26,18 @@ export default function Page() {
         const overlap = ReservationData?.reservation?.find((r) => {
           const reservationPlace = r.place;
           const reservationStart = r.timeFrom; const reservationEnd = r.timeTo; const newReservationStart = timeFrom; const newReservationEnd = timeTo
+          
           return (
-            //Pouze na stejném místě && (Novy start v Stare rezervaci || Novy konec v stare rezervaci || Nova rezervace pres starou rezervaci)
-            (reservationPlace == place && (newReservationStart >= reservationStart && newReservationStart < reservationEnd) || (newReservationEnd > reservationStart && newReservationEnd <= reservationEnd) || (newReservationStart <= reservationStart && newReservationEnd >= reservationEnd))
+            //Pouze na stejném místě && 
+            // (Novy start v Stare rezervaci || 
+            //   Novy konec v stare rezervaci || S
+            //   Nova rezervace pres starou rezervaci)
+
+            (reservationPlace == place &&
+              (newReservationStart >= reservationStart && newReservationStart < reservationEnd) ||
+              (newReservationEnd > reservationStart && newReservationEnd <= reservationEnd) ||
+              (newReservationStart <= reservationStart && newReservationEnd >= reservationEnd))
+
           );
         });
         const placeCost = placeData.data?.place.find((plc) => plc.id === place)?.cost;
@@ -50,7 +59,7 @@ export default function Page() {
               paid: false,
               confirmed: false,
               profile: profile
-            },refetchQueries: [{ query: ReservationDocument }], awaitRefetchQueries: true 
+            }, refetchQueries: [{ query: ReservationDocument }], awaitRefetchQueries: true
           });
         }
       } catch (error) {

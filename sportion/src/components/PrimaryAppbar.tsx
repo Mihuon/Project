@@ -66,7 +66,7 @@ export const PrimaryAppbar: FC<Props> = () => {
       onClose={handleMenuClose}
     >
 
-      {user?.email != null || user?.email != undefined ? (
+      {user?.email !== null || user?.email !== undefined ? (
         <div>
           <CardHeader
             avatar={
@@ -74,14 +74,14 @@ export const PrimaryAppbar: FC<Props> = () => {
                 {`${profileData?.name?.charAt(0)}${profileData?.surname?.charAt(0)}`}
               </Avatar>
             }
-            // action={
-            //   <IconButton>
-            //     Detail
-            //   </IconButton>
-            // }
             title={`${profileData?.name} ${profileData?.surname}`}
-            subheader={`${profileData?.credit} Kč`}
+            subheader={
+              profileData?.admin ?
+                <>Administrátor <br /> {`${profileData?.credit} Kč`}</> : `${profileData?.credit} Kč`
+            }
+          // subheader={`${profileData?.admin?"Administrátor\n":""}${profileData?.credit} Kč`} 
           />
+
           <Link href={`/profile/modify/${profileData?.id}`}>
             <MenuItem>Upravit</MenuItem>
           </Link></div>

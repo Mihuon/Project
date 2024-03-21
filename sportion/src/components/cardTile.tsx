@@ -20,7 +20,7 @@ export const CardTile: FC<Props> = ({ text, icon }) => {
           {icon}
         </Typography>
         <Typography variant="body2">
-          {text} Lorem ipsum dolor sit amet consectetur adipisicing elit. Non quibusdam, blanditiis est recusandae modi doloremque temporibus voluptatum eos atque commodi qui voluptas molestiae? Repellendus, ipsum rerum voluptate nisi ipsa rem.
+          {text}
         </Typography>
       </CardContent>
     </Paper>
