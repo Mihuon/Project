@@ -21,11 +21,11 @@ export default function UpdateProfile() {
       const currentProfile = data.profile.find(profile => profile.id === id);
 
       if (currentProfile) {
-        setUid(currentProfile.uid);
-        setName(currentProfile.name);
-        setSurname(currentProfile.surname);
-        setCredit(currentProfile.credit);
-        setAdmin(currentProfile.admin);
+        if (currentProfile.uid) { setUid(currentProfile.uid); }
+        if (currentProfile.name) { setName(currentProfile.name); }
+        if (currentProfile.surname) { setSurname(currentProfile.surname); }
+        if (currentProfile.credit) { setCredit(currentProfile.credit.toString()); }
+        if (currentProfile.admin) { setAdmin(currentProfile.admin); }
       }
     }
   }, [id, data]);
@@ -35,18 +35,21 @@ export default function UpdateProfile() {
   const handleForm = async (event: FormEvent) => {
     event.preventDefault();
 
-    const updatedProfileData = {
-      id: id,
-      uid,
-      name,
-      surname,
-      credit: parseInt(credit),
-      admin
-    };
-    const result = await updateProfile({
-      variables: updatedProfileData,
-    });
+    if (typeof id == 'string') {
 
+
+      const updatedProfileData = {
+        id: id,
+        uid,
+        name,
+        surname,
+        credit: parseInt(credit),
+        admin
+      };
+      const result = await updateProfile({
+        variables: updatedProfileData,
+      });
+    }
     router.push('/');
   };
 

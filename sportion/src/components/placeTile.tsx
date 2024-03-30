@@ -30,6 +30,7 @@ const PlaceTable: FC<Props> = () => {
   const { user } = useAuthContext();
   const { data: myProfileData } = useMyProfileQuery({ skip: !user })
   const profileData = myProfileData?.myProfile.find((profile) => profile.uid === user?.uid);
+
   return (
     <TableContainer component={Paper}>
       <Table size="small">
@@ -54,7 +55,7 @@ const PlaceTable: FC<Props> = () => {
 
               <TableCell align="center">
                 <Link href={`/place/detail/${place.id}`}><Button><InfoIcon fontSize='medium' className='temp' /></Button></Link>
-                {(profileData?.admin == true) ? (<><Link href={`/place/update/${place.id}`}><Button><EditNoteIcon fontSize='medium' className='temp' /></Button></Link><Button color="error" onClick={() => handleDelete(place.id)}><DeleteForeverIcon fontSize='medium' className='temp' /></Button></>) : null}
+                {(profileData?.admin == true) ? (<><Link href={`/place/update/${place.id}`}><Button><EditNoteIcon fontSize='medium' className='temp' /></Button></Link><Button color="error" onClick={() => place.id && handleDelete(place.id)}><DeleteForeverIcon fontSize='medium' className='temp' /></Button></>) : null}
               </TableCell>
               
             </TableRow>

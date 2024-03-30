@@ -17,8 +17,12 @@ export default function UpdatePlace() {
       const currentPlace = data.place.find(place => place.id === id);
 
       if (currentPlace) {
-        setName(currentPlace.name);
-        setCost(currentPlace.cost.toString());
+        if (currentPlace.name) {
+          setName(currentPlace.name);
+        }
+        if (currentPlace.cost) {
+          setCost(currentPlace.cost.toString());
+        }
       }
     }
   }, [id, data]);
@@ -28,6 +32,10 @@ export default function UpdatePlace() {
   const handleForm = async (event: FormEvent) => {
     event.preventDefault();
 
+    if (!id || Array.isArray(id)) {
+      return;
+    }
+    
     const updatedPlaceData = {
       id: id,
       name,

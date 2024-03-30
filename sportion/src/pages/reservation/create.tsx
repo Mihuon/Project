@@ -25,8 +25,12 @@ export default function Page() {
       try {
         const overlap = ReservationData?.reservation?.find((r) => {
           const reservationPlace = r.place;
-          const reservationStart = r.timeFrom; const reservationEnd = r.timeTo; const newReservationStart = timeFrom; const newReservationEnd = timeTo
+          const reservationStart = r.timeFrom; 
+          const reservationEnd = r.timeTo; 
+          const newReservationStart = timeFrom; 
+          const newReservationEnd = timeTo
           
+            if(reservationStart != null && reservationEnd != null){
           return (
             //Pouze na stejném místě && 
             // (Novy start v Stare rezervaci || 
@@ -39,6 +43,7 @@ export default function Page() {
               (newReservationStart <= reservationStart && newReservationEnd >= reservationEnd))
 
           );
+            }
         });
         const placeCost = placeData.data?.place.find((plc) => plc.id === place)?.cost;
         const hours = Math.abs(Number(new Date(timeFrom)) - Number(new Date(timeTo))) / 3600000;
@@ -48,7 +53,7 @@ export default function Page() {
         else if (overlap) {
           console.error("Overlap");
         }
-        else {
+        else if (placeCost!=null) {
           const result = await createReservation({
             variables: {
               name: name,

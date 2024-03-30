@@ -2,9 +2,6 @@ import * as Datetime from "react-datetime";
 export type Reservation = {
     id: String;
     name:String;
-    //TODO: zprovoznit DateTime
-    // timeFrom:Datetime;
-    // timeTo:Datetime;
     timeFrom:number;
     timeTo:number;
     place:String;

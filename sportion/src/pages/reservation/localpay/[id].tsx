@@ -35,13 +35,13 @@ export default function UpdateReservation() {
       const currentReservation = data.reservation.find(reservation => reservation.id === id);
 
       if (currentReservation) {
-        setName(currentReservation.name);
-        setTimeFrom(currentReservation.timeFrom.toString());
-        setTimeTo(currentReservation.timeTo.toString());
-        setPlace(currentReservation.place);
-        setCharge(currentReservation.charge);
-        setPaid(!!currentReservation.paid);
-        setConfirmed(!!currentReservation.confirmed);
+        if (currentReservation.name) {setName(currentReservation.name);}
+        if (currentReservation.timeFrom) {setTimeFrom(currentReservation.timeFrom.toString());}
+          if (currentReservation.timeTo) {setTimeTo(currentReservation.timeTo.toString());}
+            if (currentReservation.place) {setPlace(currentReservation.place);}
+              if (currentReservation.charge) {setCharge(currentReservation.charge.toString());}
+                if (currentReservation.paid) {setPaid(!!currentReservation.paid);}
+                  if (currentReservation.confirmed) {setConfirmed(!!currentReservation.confirmed);}
       }
     }
   }, [id, data]);
@@ -51,13 +51,15 @@ export default function UpdateReservation() {
   const handlePayment = async () => {
     // event.preventDefault();
 
+    
+    if (typeof id == 'string') {
     const updatedReservationData = {
       id: id,
       name,
       timeFrom,
       timeTo,
       place,
-      charge,
+      charge: parseFloat(charge),
       paid: true,
       confirmed,
     };
@@ -65,7 +67,7 @@ export default function UpdateReservation() {
     const result = await updateReservation({
       variables: updatedReservationData,
     });
-
+  }
     router.push('/');
 
 

@@ -13,14 +13,6 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  DateTime: any;
-};
-
-export type GithubUser = {
-  __typename?: 'GithubUser';
-  avatarUrl: Scalars['String'];
-  id: Scalars['ID'];
-  login: Scalars['String'];
 };
 
 export type Mutation = {
@@ -150,13 +142,11 @@ export type Profile = {
 
 export type Query = {
   __typename?: 'Query';
-  githubUsers: Array<GithubUser>;
   myProfile: Array<Profile>;
   myReservation: Array<Reservation>;
   place: Array<Place>;
   profile: Array<Profile>;
   reservation: Array<Reservation>;
-  users: Array<User>;
 };
 
 export type Reservation = {
@@ -170,11 +160,6 @@ export type Reservation = {
   profile?: Maybe<Scalars['String']>;
   timeFrom?: Maybe<Scalars['String']>;
   timeTo?: Maybe<Scalars['String']>;
-};
-
-export type User = {
-  __typename?: 'User';
-  name?: Maybe<Scalars['String']>;
 };
 
 export type PlaceQueryVariables = Exact<{ [key: string]: never; }>;

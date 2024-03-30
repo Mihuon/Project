@@ -22,11 +22,11 @@ export default function UpdateProfile() {
             const currentProfile = data.profile.find(profile => profile.id === id);
 
             if (currentProfile) {
-                setUid(currentProfile.uid);
-                setName(currentProfile.name);
-                setSurname(currentProfile.surname);
-                setCredit(currentProfile.credit);
-                setAdmin(currentProfile.admin);
+                if(currentProfile.uid) {setUid(currentProfile.uid);}
+                if(currentProfile.name) {setName(currentProfile.name);}
+                if(currentProfile.surname) {setSurname(currentProfile.surname);}
+                if(currentProfile.credit) {setCredit(currentProfile.credit.toString());}
+                if(currentProfile.admin) {setAdmin(currentProfile.admin);}
             }
         }
     }, [id, data]);
@@ -37,7 +37,7 @@ export default function UpdateProfile() {
         event.preventDefault();
 
         const updatedProfileData = {
-            id: id,
+            id: typeof id === 'string' ? id : undefined,
             uid,
             name,
             surname,

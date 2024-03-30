@@ -19,30 +19,26 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import PaymentIcon from '@mui/icons-material/Payment';
 const ReservationsTable = () => {
-  // useMyProfileQuery().refetch();
-  // useReservationQuery().refetch();
-  // useMyReservationQuery().refetch();
+  useMyProfileQuery().refetch();
+  useReservationQuery().refetch();
+  useMyReservationQuery().refetch();
 
-  const { data: placeData } = usePlaceQuery();
   const { user } = useAuthContext();
-
-
   const { data: myProfileData } = useMyProfileQuery({ skip: !user })
-  // const myProfileData = neco;
   const profileData = myProfileData?.myProfile.find((profile) => profile.uid === user?.uid);
 
+  const { data: adminProfilesData } = useProfileQuery();
+  const { data: placeData } = usePlaceQuery();
 
   let reservationData;
 
-  const { data: adminProfilesData } = useProfileQuery({ refetchQueries: [{ query: ProfileDocument }], awaitRefetchQueries: true });
+  const { data: myReservationData } = useMyReservationQuery()
+  const { data: adminReservationData } = useReservationQuery();
 
   if (profileData?.admin === true) {
-    const { data: adminReservationData } = useReservationQuery({ refetchQueries: [{ query: ReservationDocument }], awaitRefetchQueries: true });
     reservationData = adminReservationData?.reservation;
-    // const { data: adminProfilesData } = useProfileQuery();
-    // profilesData = adminProfilesData?.profile;
-  } else {
-    const { data: myReservationData } = useMyReservationQuery({ refetchQueries: [{ query: MyReservationDocument }], awaitRefetchQueries: true });
+  }
+  else {
     reservationData = myReservationData?.myReservation;
   }
 
@@ -59,8 +55,10 @@ const ReservationsTable = () => {
 
 
 
-  const reservationData2 = reservationData ? [...reservationData].sort((a, b) => (new Date(a.timeFrom)).valueOf() - (new Date(b.timeFrom)).valueOf())
-    : null;
+  const reservationData2 = reservationData ? [...reservationData].sort((a, b) => {
+    return (a.timeFrom && b.timeFrom) ?
+      (new Date(a.timeFrom)).valueOf() - (new Date(b.timeFrom)).valueOf() : 0
+  }) : null;
 
   return (
     <TableContainer component={Paper}>
@@ -97,8 +95,8 @@ const ReservationsTable = () => {
 
                 {/* <TableCell align="center">{reservation.timeFrom} - {reservation.timeTo}</TableCell> */}
                 <TableCell align="center">
-                  {`${new Date(reservation.timeFrom).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${new Date(reservation.timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
-                  <br /> {new Date(reservation.timeFrom).toLocaleDateString([], { day: 'numeric', month: 'short' })}
+                  {reservation.timeFrom && reservation.timeTo && (`${new Date(reservation.timeFrom).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${new Date(reservation.timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`)}
+                  <br />  {reservation.timeFrom && (new Date(reservation.timeFrom).toLocaleDateString([], { day: 'numeric', month: 'short' }))}
                 </TableCell>
 
                 <TableCell align="center">
@@ -119,7 +117,7 @@ const ReservationsTable = () => {
                   {(!reservation.paid && reservation.confirmed && reservation.profile == profileData?.uid) ? <Link href={`/reservation/pay/${reservation.id}`}><Button><PaymentIcon fontSize='medium' className='temp' /></Button></Link> : null}
                   {(profileData?.admin && !reservation.confirmed) ? <Link href={`/reservation/confirm/${reservation.id}`}><Button><CheckCircleIcon fontSize='medium' className='temp' /></Button></Link> : null}
                   {(profileData?.admin) ? <Link href={`/reservation/update/${reservation.id}`}><Button><EditNoteIcon fontSize='medium' className='temp' /></Button></Link> : null}
-                  {(!reservation.paid || profileData?.admin) ? <Button color="error" onClick={() => handleDelete(reservation.id)}><DeleteForeverIcon fontSize='medium' className='temp' /></Button> : null}
+                  {(!reservation.paid || profileData?.admin) ? <Button color="error" onClick={() => reservation.id && handleDelete(reservation.id)}><DeleteForeverIcon fontSize='medium' className='temp' /></Button> : null}
                 </TableCell>
               </TableRow>
             );

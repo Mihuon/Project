@@ -19,10 +19,8 @@ export default function UpdatePlace() {
           <p>Název: {currentReservation?.name}</p>
           {/* <p>Čas: {`${new Date(timeFrom).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${new Date(timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</p> */}
           <p>
-            Čas: {`${new Date(currentReservation?.timeFrom).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-            })} ${new Date(currentReservation?.timeFrom).toLocaleDateString()} - ${new Date(currentReservation?.timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })} ${new Date(currentReservation?.timeTo).toLocaleDateString()} `}
+            {/*@ts-expect-error vzřešit date errory*/}
+            Čas: {`${new Date(currentReservation?.timeFrom).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })}${new Date(currentReservation?.timeFrom).toLocaleDateString()} - ${new Date(currentReservation?.timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })} ${new Date(currentReservation?.timeTo).toLocaleDateString()} `}
           </p>
           <p>Sportoviště: {placeData?.place.find((plc) => plc.id === currentReservation?.place)?.name}</p>
           <p>Stav:

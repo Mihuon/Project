@@ -3,54 +3,22 @@ import { Context } from '@apollo/client';
 import axios from 'axios';
 import { gql } from 'graphql-tag';
 import { createSchema, createYoga } from 'graphql-yoga';
-import { DateTimeResolver} from 'graphql-scalars'
+import { DateTimeResolver } from 'graphql-scalars'
 
 import { firestore } from '../../server/firebase-admin-config';
 import { verifyToken } from '../../server/verifyToken';
 import { DecodedIdToken } from 'firebase-admin/auth';
 import { profile } from 'console';
 
-import DateTime from 'react-datetime';
-
-
-
 type MyContext = { user?: DecodedIdToken };
 
 const typeDefs = gql`
-
   type Query {
-    users: [User!]!
-    githubUsers: [GithubUser!]!
-    profile:[Profile!]!
     reservation: [Reservation!]!
     myReservation:[Reservation!]!
+    profile:[Profile!]!
     myProfile:[Profile!]!
     place: [Place!]!
-  }
-  scalar DateTime
-  type User {
-    name: String
-  }
-  type Profile {
-  id: String
-    uid: String
-    name: String
-    surname: String
-    credit: Int
-    admin: Boolean
-  }
-  type MyProfile {
-  id: String
-    uid: String
-    name: String
-    surname: String
-    credit: Int
-    admin: Boolean
-  }
-  type GithubUser {
-    id: ID!
-    login: String!
-    avatarUrl: String!
   }
   type Reservation {
   id: String
@@ -63,16 +31,13 @@ const typeDefs = gql`
   confirmed: Boolean
   profile:String
   }
-  type MyReservation {
+  type Profile {
   id: String
-  name: String
-  timeFrom: String
-  timeTo: String
-  place: String
-  charge: Int
-  paid: Boolean
-  confirmed: Boolean
-  profile:String
+    uid: String
+    name: String
+    surname: String
+    credit: Int
+    admin: Boolean
   }
   type Place {
   id:String
@@ -136,24 +101,11 @@ const typeDefs = gql`
 `;
 const db = firestore();
 const resolvers = {
-        // DateTime: DateTimeResolver,
     Query: {
-        users: async () => {
-            const usersRef = db.collection(
-                'users',
-            ) as FirebaseFirestore.CollectionReference<DbUser>;
-            const docsRefs = await usersRef.listDocuments();
-            const docsSnapshotPromises = docsRefs.map((doc) => doc.get());
-            const docsSnapshots = await Promise.all(docsSnapshotPromises);
-            const docs = docsSnapshots.map((doc) => doc.data()!);
-            console.log(docs);
-
-            return [{ name: 'Nextjs' }];
-        },
         profile: async (context: Context) => {
             const result = await db.collection('Profile').get();
 
-            const data = [];
+            const data: { id: string; uid: string; name: string; surname: string; credit: number; admin: boolean; }[] = [];
 
             result.forEach((doc) => {
                 const docData = doc.data();
@@ -166,15 +118,13 @@ const resolvers = {
                     admin: docData.admin
                 });
             });
-            // console.log(data);
             return data;
         },
         myProfile: async (parent: unknown, args: unknown, context: MyContext) => {
             const user = context.user;
-            // console.log(`User: ${JSON.stringify(user)}`);
             const result = await db.collection('Profile').where('uid', '==', user?.uid).get();
 
-            const data = [];
+            const data: { id: string; uid: string; name: string; surname: string; credit: number; admin: boolean; }[] = [];
 
             result.forEach((doc) => {
                 const docData = doc.data();
@@ -187,13 +137,22 @@ const resolvers = {
                     admin: docData.admin
                 });
             });
-            // console.log(data);
             return data;
         },
         reservation: async (context: Context) => {
             const result = await db.collection('Reservation').get();
 
-            const data = [];
+            const data: {
+                id: string;
+                name: string;
+                timeFrom: string;
+                timeTo: string;
+                place: string;
+                paid: boolean;
+                confirmed: boolean;
+                charge: number;
+                profile: string;
+            }[] = [];
 
             result.forEach((doc) => {
                 const docData = doc.data();
@@ -209,13 +168,12 @@ const resolvers = {
                     profile: docData.profile
                 });
             });
-            // console.log(data);
             return data;
         },
         myReservation: async (parent: unknown, args: unknown, context: MyContext) => {
             const user = context.user;
             const result = await db.collection('Reservation').where('profile', '==', user?.uid).get();
-            const data = [];
+            const data: { id: string; name: string; timeFrom: string; timeTo: string; place: string; paid: boolean; confirmed: boolean; charge: number; profile: string; }[] = [];
 
             result.forEach((doc) => {
                 const docData = doc.data();
@@ -231,14 +189,12 @@ const resolvers = {
                     profile: docData.profile
                 });
             });
-            // console.log(data);
             return data;
         },
-        //autentikace zapsat
         place: async (context: Context) => {
             const result = await db.collection('Place').get();
 
-            const data = [];
+            const data: { id: string; name: string; cost: number; }[] = [];
 
             result.forEach((doc) => {
                 const docData = doc.data();
@@ -248,26 +204,21 @@ const resolvers = {
                     cost: docData.cost
                 });
             });
-            
+
             return data;
         },
-        githubUsers: async () => {
-            try {
-                const users = await axios.get('https://api.github.com/users');
-                // @ts-ignore
-                return users.data.map(({ id, login, avatar_url: avatarUrl }) => ({
-                    id,
-                    login,
-                    avatarUrl,
-                }));
-            } catch (error) {
-                throw error;
-            }
-        }
     },
     Mutation: {
-        createReservation: (parent: unknown, args: { name: string, timeFrom: string, timeTo: string, place: string, charge: number, paid: boolean, confirmed: boolean, profile: string }) => {
-            console.log(args)
+        createReservation: (parent: unknown, args: {
+            name: string,
+            timeFrom: string,
+            timeTo: string,
+            place: string,
+            charge: number,
+            paid: boolean,
+            confirmed: boolean,
+            profile: string
+        }) => {
             const reservation = {
                 name: args.name,
                 timeFrom: args.timeFrom,
@@ -392,8 +343,6 @@ export default createYoga({
     graphqlEndpoint: '/api/graphql',
     context: async (context) => {
         const auth = context.request.headers.get('authorization');
-        //! SMAZAT CONSOLE LOG
-        // console.log(auth);
         return {
             user: auth ? await verifyToken(auth) : undefined,
         } as Context;
