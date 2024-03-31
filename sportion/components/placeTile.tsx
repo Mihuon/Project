@@ -8,7 +8,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { usePlaceQuery, useDeletePlaceMutation, useMyProfileQuery } from '../../generated/graphql';
+import { usePlaceQuery, useDeletePlaceMutation, useMyProfileQuery } from '../generated/graphql';
 import { useAuthContext } from './auth-context-provider';
 
 import InfoIcon from '@mui/icons-material/Info';

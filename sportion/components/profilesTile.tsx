@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useProfileQuery } from '../../generated/graphql';
+import { useProfileQuery } from '../generated/graphql';
 
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import AddCardIcon from '@mui/icons-material/AddCard';

@@ -8,7 +8,7 @@ import {
   useMyProfileLazyQuery,
   useMyProfileQuery
 } from '../../../../generated/graphql';
-import { useAuthContext } from '@/components/auth-context-provider';
+import { useAuthContext } from '../../../../components/auth-context-provider';
 
 export default function UpdateReservation() {
   const router = useRouter();

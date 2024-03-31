@@ -2,7 +2,7 @@ import React, { FormEvent, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ReservationDocument, useCreateReservationMutation, usePlaceQuery, useReservationQuery } from '../../../generated/graphql';
 import { authUtils } from '../../firebase/authUtils';
-import { useAuthContext } from '@/components/auth-context-provider';
+import { useAuthContext } from '../../../components/auth-context-provider';
 import Select from 'react-select';
 
 export default function Page() {

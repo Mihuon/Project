@@ -4,7 +4,7 @@ import { ReservationTile } from "./reservationTile";
 import { PlaceTile } from "./placeTile";
 import { ProfilesTile } from "./profilesTile";
 import { useAuthContext } from "./auth-context-provider";
-import { useMyProfileQuery } from "../../generated/graphql";
+import { useMyProfileQuery } from "../generated/graphql";
 import { ToolsTile } from "./toolsTile";
 import InfoIcon from '@mui/icons-material/Info';
 import EventNoteIcon from '@mui/icons-material/EventNote';

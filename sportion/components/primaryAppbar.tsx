@@ -12,7 +12,7 @@ import { FC } from 'react';
 import { useAuthContext } from './auth-context-provider';
 import { authUtils } from '@/firebase/authUtils';
 import Link from 'next/link';
-import { useMyProfileQuery } from '../../generated/graphql';
+import { useMyProfileQuery } from '../generated/graphql';
 import { Avatar, CardHeader } from '@mui/material';
 type Props = {};
 

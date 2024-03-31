@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Typography, Button } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import { useMyProfileQuery, useProfileQuery } from '../../generated/graphql';
+import { useMyProfileQuery, useProfileQuery } from '../generated/graphql';
 import { useAuthContext } from './auth-context-provider';
 import StadiumRoundedIcon from '@mui/icons-material/StadiumRounded';
 import EventNoteRoundedIcon from '@mui/icons-material/EventNoteRounded';

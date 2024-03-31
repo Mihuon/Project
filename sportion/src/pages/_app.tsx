@@ -4,8 +4,8 @@ import '@/styles/form.css'
 import { ApolloProvider } from '@apollo/client'
 import type { AppProps } from 'next/app'
 import { getApolloClient } from '../utility/appolo-client';
-import { AuthContextProvider } from '@/components/auth-context-provider';
-import { PrimaryAppbar } from '@/components/primaryAppbar'
+import { AuthContextProvider } from '../../components/auth-context-provider';
+import { PrimaryAppbar } from '../../components/primaryAppbar'
 
 import style from '@/styles/theme/style';
 
