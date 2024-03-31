@@ -23,24 +23,6 @@ function Page() {
     event.preventDefault();
     await authUtils.register(email, password);
 
-    // const createProfileHandler = async () => {
-    //   try {
-    //     const result = await createProfile({
-    //       variables: {
-    //         name: name,
-    //         timeFrom: parseInt(timeFrom),
-    //         timeTo: parseInt(timeTo),
-    //         place: place,
-    //         charge: parseFloat(charge),
-    //         paid: paid,
-    //         profile: profile
-    //       },
-    //     });
-
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // };
     return router.push('/profile/create');
   };
   return (

@@ -3,7 +3,6 @@ import { Context } from '@apollo/client';
 import axios from 'axios';
 import { gql } from 'graphql-tag';
 import { createSchema, createYoga } from 'graphql-yoga';
-import { DateTimeResolver } from 'graphql-scalars'
 
 import { firestore } from '../../server/firebase-admin-config';
 import { verifyToken } from '../../server/verifyToken';
@@ -343,7 +342,7 @@ export default createYoga({
     graphqlEndpoint: '/api/graphql',
     context: async (context) => {
         const auth = context.request.headers.get('authorization');
-        return {
+        return {           
             user: auth ? await verifyToken(auth) : undefined,
         } as Context;
     },

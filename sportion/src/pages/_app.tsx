@@ -15,16 +15,16 @@ import { createTheme } from '@mui/material'
 export default function App({ Component, pageProps }: AppProps) {
 
   const theme = createTheme(style)
-  
+
   const client = getApolloClient({ forceNew: false });
   return (
     <AuthContextProvider>
 
       <ApolloProvider client={client}>
         <ThemeProvider theme={theme}>
-        <PrimaryAppbar />
-        <Component {...pageProps} />
-</ThemeProvider>
+          <PrimaryAppbar />
+          <Component {...pageProps} />
+        </ThemeProvider>
       </ApolloProvider>
     </AuthContextProvider>
   )

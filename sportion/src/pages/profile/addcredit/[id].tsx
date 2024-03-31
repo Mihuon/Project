@@ -13,8 +13,8 @@ export default function UpdateProfile() {
     const [uid, setUid] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
-    const [credit, setCredit] = useState('');
-    const [credit2, setCredit2] = useState('');
+    const [credit, setCredit] = useState(Number);
+    const [credit2, setCredit2] = useState(Number);
     const [admin, setAdmin] = useState(false);
 
     useEffect(() => {
@@ -22,11 +22,11 @@ export default function UpdateProfile() {
             const currentProfile = data.profile.find(profile => profile.id === id);
 
             if (currentProfile) {
-                if(currentProfile.uid) {setUid(currentProfile.uid);}
-                if(currentProfile.name) {setName(currentProfile.name);}
-                if(currentProfile.surname) {setSurname(currentProfile.surname);}
-                if(currentProfile.credit) {setCredit(currentProfile.credit.toString());}
-                if(currentProfile.admin) {setAdmin(currentProfile.admin);}
+                if (currentProfile.uid) { setUid(currentProfile.uid); }
+                if (currentProfile.name) { setName(currentProfile.name); }
+                if (currentProfile.surname) { setSurname(currentProfile.surname); }
+                if (currentProfile.credit) { setCredit(currentProfile.credit); }
+                if (currentProfile.admin) { setAdmin(currentProfile.admin); }
             }
         }
     }, [id, data]);
@@ -41,7 +41,7 @@ export default function UpdateProfile() {
             uid,
             name,
             surname,
-            credit: parseInt(credit) + parseInt(credit2),
+            credit: credit + credit2,
             admin
         };
         const result = await updateProfile({
@@ -64,7 +64,7 @@ export default function UpdateProfile() {
                         <label>
                             <p>Přidaný kredit</p>
                             <input
-                                onChange={(e) => setCredit2(e.target.value)}
+                                onChange={(e) => setCredit2(parseInt(e.target.value))}
                                 required
                                 type="number"
                             />

@@ -4,12 +4,9 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { FC } from 'react';
 import { useAuthContext } from './auth-context-provider';
@@ -17,7 +14,6 @@ import { authUtils } from '@/firebase/authUtils';
 import Link from 'next/link';
 import { useMyProfileQuery } from '../../generated/graphql';
 import { Avatar, CardHeader } from '@mui/material';
-import { blue } from '@mui/material/colors';
 type Props = {};
 
 export const PrimaryAppbar: FC<Props> = () => {
@@ -66,7 +62,7 @@ export const PrimaryAppbar: FC<Props> = () => {
       onClose={handleMenuClose}
     >
 
-      {user?.email !== null || user?.email !== undefined ? (
+      {user?.email !== null && user?.email !== undefined ? (
         <div>
           <CardHeader
             avatar={
@@ -79,7 +75,6 @@ export const PrimaryAppbar: FC<Props> = () => {
               profileData?.admin ?
                 <>Administrátor <br /> {`${profileData?.credit} Kč`}</> : `${profileData?.credit} Kč`
             }
-          // subheader={`${profileData?.admin?"Administrátor\n":""}${profileData?.credit} Kč`} 
           />
 
           <Link href={`/profile/modify/${profileData?.id}`}>
@@ -126,14 +121,6 @@ export const PrimaryAppbar: FC<Props> = () => {
     <Box className='appBarBox' sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar className='appBar' >
-          {/* <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton> */}
           <Typography
             variant="h6"
             noWrap
@@ -145,14 +132,6 @@ export const PrimaryAppbar: FC<Props> = () => {
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            {/* <IconButton
-              size="large"
-              color="inherit"
-            >
-              <Badge badgeContent={0} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton> */}
             <IconButton
               size="large"
               edge="end"

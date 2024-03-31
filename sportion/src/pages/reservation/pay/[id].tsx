@@ -16,7 +16,6 @@ export default function UpdateReservation() {
   const id = query.id;
 
   const { data } = useReservationQuery();
-  console.log(data);
 
   const [name, setName] = useState('');
   const [timeFrom, setTimeFrom] = useState('');
@@ -54,7 +53,7 @@ export default function UpdateReservation() {
 
     const userProfile = myProfileData?.myProfile.find((profile) => profile.uid === user?.uid);
 
-    if (userProfile && paid != true && confirmed == true && userProfile.credit!=null &&userProfile.credit >= parseFloat(charge)) {
+    if (userProfile && paid != true && confirmed == true && userProfile.credit != null && userProfile.credit >= parseFloat(charge)) {
       const updatedProfileCredit = userProfile.credit - parseFloat(charge);
 
       const result = await updateProfile({
@@ -66,27 +65,26 @@ export default function UpdateReservation() {
 
       if (result.data?.updateCreditProfile) {
         if (typeof id === 'string') {
-        const updatedReservationData = {
-          id: id,
-          name,
-          timeFrom,
-          timeTo,
-          place,
-          charge: parseFloat(charge),
-          paid: true,
-          confirmed,
-        };
+          const updatedReservationData = {
+            id: id,
+            name,
+            timeFrom,
+            timeTo,
+            place,
+            charge: parseFloat(charge),
+            paid: true,
+            confirmed,
+          };
 
-        await updateReservation({
-          variables: updatedReservationData,
-        });
-      }
+          await updateReservation({
+            variables: updatedReservationData,
+          });
+        }
         router.push('/');
       }
     }
   };
 
-  //box a typography
   const { data: placeData } = usePlaceQuery();
   return (
     <div className="wrapper">

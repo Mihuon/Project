@@ -37,7 +37,6 @@ export default function UpdateProfile() {
 
     if (typeof id == 'string') {
 
-
       const updatedProfileData = {
         id: id,
         uid,
@@ -97,8 +96,6 @@ export default function UpdateProfile() {
                 value={[{ value: true, label: "Ano" }, { value: false, label: "Ne" }].find((p) => p.value === admin)}
               />
             </label>
-
-
             <button type="submit">Upravit profil</button>
           </form>
         </div>

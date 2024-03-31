@@ -7,7 +7,6 @@ export default function UpdateReservation() {
   const { query } = router;
   const id = query.id;
   const { data } = useReservationQuery();
-console.log(data);
 
   const [name, setName] = useState('');
   const [timeFrom, setTimeFrom] = useState('');
@@ -26,13 +25,13 @@ console.log(data);
       const currentReservation = data.reservation.find(reservation => reservation.id === id);
 
       if (currentReservation) {
-        if (currentReservation.name) {setName(currentReservation.name);}
-          if (currentReservation.timeFrom) {setTimeFrom(currentReservation.timeFrom.toString());}
-            if (currentReservation.timeTo) {setTimeTo(currentReservation.timeTo.toString());}
-              if (currentReservation.place) {setPlace(currentReservation.place);}
-                if (currentReservation.charge) {setCharge(currentReservation.charge.toString());}
-                  if (currentReservation.paid) {setPaid(!!currentReservation.paid);}
-                    if (currentReservation.confirmed) {setConfirmed(!!currentReservation.confirmed);}
+        if (currentReservation.name) { setName(currentReservation.name); }
+        if (currentReservation.timeFrom) { setTimeFrom(currentReservation.timeFrom.toString()); }
+        if (currentReservation.timeTo) { setTimeTo(currentReservation.timeTo.toString()); }
+        if (currentReservation.place) { setPlace(currentReservation.place); }
+        if (currentReservation.charge) { setCharge(currentReservation.charge.toString()); }
+        if (currentReservation.paid) { setPaid(!!currentReservation.paid); }
+        if (currentReservation.confirmed) { setConfirmed(!!currentReservation.confirmed); }
       }
     }
   }, [id, data]);
@@ -43,21 +42,21 @@ console.log(data);
     event.preventDefault();
 
     if (typeof id === 'string') {
-    const updatedReservationData = {
-      id: id,
-      name,
-      timeFrom: timeFrom.toString(),
-      timeTo: timeTo.toString(),
-      place,
-      charge: parseFloat(charge),
-      paid,
-      confirmed,
-    };
+      const updatedReservationData = {
+        id: id,
+        name,
+        timeFrom: timeFrom.toString(),
+        timeTo: timeTo.toString(),
+        place,
+        charge: parseFloat(charge),
+        paid,
+        confirmed,
+      };
 
-    const result = await updateReservation({
-      variables: updatedReservationData,
-    });
-  }
+      const result = await updateReservation({
+        variables: updatedReservationData,
+      });
+    }
     router.push('/');
   };
 
@@ -94,32 +93,13 @@ console.log(data);
             />
           </label>
           <label>
-            {/* <p>Místo</p>
-            <Select
-              onChange={(SelectedOption: any) => setPlace(String(SelectedOption.value))}
-              options={usePlaceQuery().data?.place.map((place) => (
-                { value: place.id, label: place.name }
-              ))}
-              value={options?.find((option)=>option.value === place)}
-              required
-            /> */}
             <p>Sportoviště</p>
             <Select
               onChange={(SelectedOption: any) => setPlace(String(SelectedOption.value))}
               options={places}
-              // value={usePlaceQuery().data?.place.find((option)=>option.value === place)}
               value={places?.find((e) => e.value === place)}
               required
             />
-            {/* <select
-              onChange={(e) => setPlace(e.target.value)}
-              required
-              value={place}
-            >
-              {usePlaceQuery().data?.place.map((place) => (
-              <option key={place.id} value={place.id?.toString()}>{place.name}</option>
-              ))}
-            </select> */}
           </label>
 
           <label>
@@ -135,18 +115,18 @@ console.log(data);
             <p>Zaplaceno</p>
             <Select
               onChange={(SelectedOption: any) => setPaid(SelectedOption.value)}
-              options={[{ value: true, label: "Ano"},{ value: false, label: "Ne"}]}
+              options={[{ value: true, label: "Ano" }, { value: false, label: "Ne" }]}
               required
-              value={[{ value: true, label: "Ano"},{ value: false, label: "Ne"}].find((p) => p.value === paid)}
+              value={[{ value: true, label: "Ano" }, { value: false, label: "Ne" }].find((p) => p.value === paid)}
             />
           </label>
           <label>
             <p>Potvrzeno</p>
             <Select
               onChange={(SelectedOption: any) => setConfirmed(SelectedOption.value)}
-              options={[{ value: true, label: "Ano"},{ value: false, label: "Ne"}]}
+              options={[{ value: true, label: "Ano" }, { value: false, label: "Ne" }]}
               required
-              value={[{ value: true, label: "Ano"},{ value: false, label: "Ne"}].find((c) => c.value === confirmed)}
+              value={[{ value: true, label: "Ano" }, { value: false, label: "Ne" }].find((c) => c.value === confirmed)}
             />
           </label>
           <button type="submit">Upravit</button>

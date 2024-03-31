@@ -16,7 +16,6 @@ export default function UpdateReservation() {
   const id = query.id;
 
   const { data } = useReservationQuery();
-  console.log(data);
 
   const [name, setName] = useState('');
   const [timeFrom, setTimeFrom] = useState('');
@@ -35,13 +34,13 @@ export default function UpdateReservation() {
       const currentReservation = data.reservation.find(reservation => reservation.id === id);
 
       if (currentReservation) {
-        if (currentReservation.name) {setName(currentReservation.name);}
-        if (currentReservation.timeFrom) {setTimeFrom(currentReservation.timeFrom.toString());}
-          if (currentReservation.timeTo) {setTimeTo(currentReservation.timeTo.toString());}
-            if (currentReservation.place) {setPlace(currentReservation.place);}
-              if (currentReservation.charge) {setCharge(currentReservation.charge.toString());}
-                if (currentReservation.paid) {setPaid(!!currentReservation.paid);}
-                  if (currentReservation.confirmed) {setConfirmed(!!currentReservation.confirmed);}
+        if (currentReservation.name) { setName(currentReservation.name); }
+        if (currentReservation.timeFrom) { setTimeFrom(currentReservation.timeFrom.toString()); }
+        if (currentReservation.timeTo) { setTimeTo(currentReservation.timeTo.toString()); }
+        if (currentReservation.place) { setPlace(currentReservation.place); }
+        if (currentReservation.charge) { setCharge(currentReservation.charge.toString()); }
+        if (currentReservation.paid) { setPaid(!!currentReservation.paid); }
+        if (currentReservation.confirmed) { setConfirmed(!!currentReservation.confirmed); }
       }
     }
   }, [id, data]);
@@ -49,31 +48,27 @@ export default function UpdateReservation() {
   const [updateReservation] = useUpdateReservationMutation();
 
   const handlePayment = async () => {
-    // event.preventDefault();
-
-    
     if (typeof id == 'string') {
-    const updatedReservationData = {
-      id: id,
-      name,
-      timeFrom,
-      timeTo,
-      place,
-      charge: parseFloat(charge),
-      paid: true,
-      confirmed,
-    };
+      const updatedReservationData = {
+        id: id,
+        name,
+        timeFrom,
+        timeTo,
+        place,
+        charge: parseFloat(charge),
+        paid: true,
+        confirmed,
+      };
 
-    const result = await updateReservation({
-      variables: updatedReservationData,
-    });
-  }
+      const result = await updateReservation({
+        variables: updatedReservationData,
+      });
+    }
     router.push('/');
 
 
   };
 
-  //box a typography
   const { data: placeData } = usePlaceQuery();
   return (
     <div className="wrapper">

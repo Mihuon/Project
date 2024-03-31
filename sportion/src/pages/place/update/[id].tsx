@@ -35,7 +35,7 @@ export default function UpdatePlace() {
     if (!id || Array.isArray(id)) {
       return;
     }
-    
+
     const updatedPlaceData = {
       id: id,
       name,

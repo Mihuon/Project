@@ -8,7 +8,6 @@ export default function UpdateReservation() {
   const id = query.id;
 
   const { data } = useReservationQuery();
-  console.log(data);
 
   const { data: placeData } = usePlaceQuery();
   const [name, setName] = useState('');
@@ -69,7 +68,6 @@ export default function UpdateReservation() {
         <div className='form'>
           <h1>Potvrdit rezervaci</h1>
           <p>Název: {name}</p>
-          {/* <p>Čas: {`${new Date(timeFrom).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${new Date(timeTo).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</p> */}
           <p>
             Čas: {`${new Date(timeFrom).toLocaleTimeString([], {
               hour: '2-digit',

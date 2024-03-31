@@ -12,7 +12,7 @@ export default function UpdateProfile() {
   const [uid, setUid] = useState('');
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
-  const [credit, setCredit] = useState('');
+  const [credit, setCredit] = useState(Number)
   const [admin, setAdmin] = useState(false);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function UpdateProfile() {
         if (currentProfile.uid) { setUid(currentProfile.uid); }
         if (currentProfile.name) { setName(currentProfile.name); }
         if (currentProfile.surname) { setSurname(currentProfile.surname); }
-        if (currentProfile.credit) { setCredit(currentProfile.credit.toString()); }
+        if (currentProfile.credit) { setCredit(currentProfile.credit); }
         if (currentProfile.admin) { setAdmin(currentProfile.admin); }
       }
     }
@@ -41,7 +41,7 @@ export default function UpdateProfile() {
         uid: uid,
         name,
         surname,
-        credit: parseInt(credit),
+        credit: credit,
         admin: admin
       };
       const result = await updateProfile({
@@ -58,15 +58,6 @@ export default function UpdateProfile() {
         <div className='form'>
           <h1>Upravit profil</h1>
           <form onSubmit={handleForm} className="form">
-            {/* <label>
-            <p>Uid</p>
-            <input
-              onChange={(e) => setUid(e.target.value)}
-              required
-              type="text"
-              value={uid}
-            />
-          </label> */}
             <label>
               <p>Jméno</p>
               <input
@@ -85,26 +76,6 @@ export default function UpdateProfile() {
                 value={surname}
               />
             </label>
-            {/* <label>
-            <p>Credit</p>
-            <input
-              onChange={(e) => setCredit(e.target.value)}
-              required
-              type="number"
-              value={credit}
-            />
-          </label>
-          <label>
-            <p>Admin</p>
-            <select
-              onChange={(e) => setAdmin(e.target.value === 'true')}
-              required
-              value={admin ? 'true' : 'false'}
-            >
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
-          </label> */}
             <button type="submit">Upravit</button>
           </form>
         </div>

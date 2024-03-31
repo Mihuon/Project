@@ -1,7 +1,6 @@
 
 import React, { FC } from 'react';
-import { Link, MenuItem, Typography, Button } from '@mui/material';
-import { Place } from '../../types';
+import { Link, Typography, Button } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -48,16 +47,12 @@ const PlaceTable: FC<Props> = () => {
                 {place.name}
               </TableCell>
               <TableCell align="center">{place.cost} Kč</TableCell>
-              {/* <TableCell align="center">
-                <Link href={`/place/detail/${place.id}`}><Button>Detail</Button></Link>
-                {(profileData?.admin == true) ? (<><Link href={`/place/update/${place.id}`}><Button>Upravit</Button></Link><Button color="error" onClick={() => handleDelete(place.id)}>Smazat</Button></>) : null}
-              </TableCell> */}
 
               <TableCell align="center">
                 <Link href={`/place/detail/${place.id}`}><Button><InfoIcon fontSize='medium' className='temp' /></Button></Link>
                 {(profileData?.admin == true) ? (<><Link href={`/place/update/${place.id}`}><Button><EditNoteIcon fontSize='medium' className='temp' /></Button></Link><Button color="error" onClick={() => place.id && handleDelete(place.id)}><DeleteForeverIcon fontSize='medium' className='temp' /></Button></>) : null}
               </TableCell>
-              
+
             </TableRow>
           ))}
         </TableBody>
@@ -67,10 +62,7 @@ const PlaceTable: FC<Props> = () => {
 };
 export const PlaceTile: FC<Props> = () => {
   return (
-    <Paper sx={{ maxWidth: 500 }}>
-      {/* <Link href="/place/create">
-        <MenuItem>Přidat</MenuItem>
-      </Link> */}
+    <Paper >
       <Typography className="tileHead" align="center" variant="h4">
         Sportoviště
       </Typography>

@@ -11,7 +11,7 @@ export default function Page() {
   const [uid, setUid] = useState('');
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
-  const [credit, setCredit] = useState('');
+  const [credit, setCredit] = useState(0);
   const [admin, setAdmin] = useState(false);
 
   const router = useRouter();
