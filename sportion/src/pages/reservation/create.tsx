@@ -10,7 +10,7 @@ export default function Page() {
   const [name, setName] = useState('');
   const [timeFrom, setTimeFrom] = useState('');
   const [timeTo, setTimeTo] = useState('');
-  const [place, setPlace] = useState('');
+  const [place1, setPlace] = useState('');
   const [charge, setCharge] = useState('');
   const [paid, setPaid] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
@@ -37,15 +37,15 @@ export default function Page() {
               //   Novy konec v stare rezervaci || S
               //   Nova rezervace pres starou rezervaci)
 
-              (reservationPlace == place &&
+              (reservationPlace === place1 &&(
                 (newReservationStart >= reservationStart && newReservationStart < reservationEnd) ||
                 (newReservationEnd > reservationStart && newReservationEnd <= reservationEnd) ||
-                (newReservationStart <= reservationStart && newReservationEnd >= reservationEnd))
+                (newReservationStart <= reservationStart && newReservationEnd >= reservationEnd)))
 
             );
           }
         });
-        const placeCost = placeData.data?.place.find((plc) => plc.id === place)?.cost;
+        const placeCost = placeData.data?.place.find((plc) => plc.id === place1)?.cost;
         const hours = Math.abs(Number(new Date(timeFrom)) - Number(new Date(timeTo))) / 3600000;
         if (timeFrom > timeTo) {
           console.error("Bad Time");
@@ -59,7 +59,7 @@ export default function Page() {
               name: name,
               timeFrom: timeFrom.toString(),
               timeTo: timeTo.toString(),
-              place: place,
+              place: place1,
               charge: Math.floor(placeCost * hours),
               paid: false,
               confirmed: false,
